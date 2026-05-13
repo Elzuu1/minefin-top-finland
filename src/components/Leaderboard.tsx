@@ -1,31 +1,39 @@
 import { useEffect, useState } from "react";
-import { fetchServers, type Server } from "@/lib/servers";
+import { fetchServers, type ServerWithStats } from "@/lib/servers";
+import { useAuth } from "@/lib/auth";
 import { ServerCard } from "./ServerCard";
 
 function Skeleton() {
   return (
-    <div className="relative h-[92px] overflow-hidden rounded-2xl border border-border/60 bg-card/50">
+    <div className="relative h-[100px] overflow-hidden rounded-2xl border border-border/60 bg-card/50">
       <div className="absolute inset-0 animate-shimmer" />
     </div>
   );
 }
 
 export function Leaderboard() {
-  const [servers, setServers] = useState<Server[] | null>(null);
+  const { user } = useAuth();
+  const [servers, setServers] = useState<ServerWithStats[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
 
   const load = async () => {
     setRefreshing(true);
-    const data = await fetchServers();
-    setServers(data);
-    setRefreshing(false);
+    try {
+      const data = await fetchServers(user?.id);
+      setServers(data);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useEffect(() => {
     load();
     const id = setInterval(load, 30000);
     return () => clearInterval(id);
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+
+  const top10 = servers?.slice(0, 10) ?? null;
 
   return (
     <section id="leaderboard" className="relative mx-auto w-full max-w-5xl scroll-mt-24 px-4 py-20 sm:py-28">
@@ -46,15 +54,14 @@ export function Leaderboard() {
               refreshing ? "bg-[color:var(--neon)] animate-pulse-dot" : "bg-[color:var(--success)]",
             ].join(" ")}
           />
-          {refreshing ? "Päivitetään…" : "Live · päivittyy 30s välein"}
+          {refreshing ? "Päivitetään…" : "Live · 30s välein"}
         </div>
       </div>
 
       <div className="space-y-3">
-        {!servers &&
-          Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} />)}
+        {!top10 && Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} />)}
 
-        {servers?.map((s, i) => (
+        {top10?.map((s, i) => (
           <div key={s.id} className="animate-rise" style={{ animationDelay: `${i * 40}ms` }}>
             <ServerCard server={s} rank={i + 1} />
           </div>

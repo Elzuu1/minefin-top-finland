@@ -6,7 +6,7 @@ export function Hero() {
       <div className="absolute inset-0 grid-bg" />
       <div className="absolute inset-x-0 top-0 -z-10 h-[120%]" style={{ background: "var(--gradient-hero)" }} />
 
-      <div className="relative mx-auto flex min-h-[90vh] max-w-5xl flex-col items-center justify-center px-4 py-24 text-center">
+      <div className="relative mx-auto flex min-h-[85vh] max-w-5xl flex-col items-center justify-center px-4 py-20 text-center">
         <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-medium text-muted-foreground backdrop-blur animate-rise">
           <span className="h-2 w-2 rounded-full bg-[color:var(--neon)] animate-pulse-dot" />
           Live Suomen Minecraft-serverit
@@ -21,10 +21,7 @@ export function Hero() {
           </span>
         </h1>
 
-        <p
-          className="mt-6 text-lg text-muted-foreground sm:text-xl animate-rise"
-          style={{ animationDelay: "160ms" }}
-        >
+        <p className="mt-6 text-lg text-muted-foreground sm:text-xl animate-rise" style={{ animationDelay: "160ms" }}>
           Suomen Minecraft Leaderboardit
         </p>
 
@@ -47,9 +44,7 @@ export function Hero() {
             E
           </div>
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
-              Created by
-            </p>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Created by</p>
             <p className="text-sm font-semibold">Elzuu1</p>
           </div>
         </div>

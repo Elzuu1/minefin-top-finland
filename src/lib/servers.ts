@@ -1,34 +1,94 @@
-export type Server = {
+import { supabase } from "@/integrations/supabase/client";
+
+export type DBServer = {
   id: string;
+  slug: string;
   name: string;
   ip: string;
+  description: string | null;
+  version: string | null;
+  discord_url: string | null;
+  banner_url: string | null;
+  icon_color: string;
+  icon_letter: string;
+  is_featured: boolean;
   players: number;
-  maxPlayers: number;
+  max_players: number;
   online: boolean;
-  trend: "up" | "down" | "flat";
-  iconColor: string; // oklch
-  iconLetter: string;
+  trend: string;
+  sort_order: number;
 };
 
-// Mock data — structure ready for live API replacement
-export const MOCK_SERVERS: Server[] = [
-  { id: "1", name: "VanillaFinland", ip: "play.vanillafinland.fi", players: 842, maxPlayers: 1000, online: true, trend: "up", iconColor: "oklch(0.7 0.18 145)", iconLetter: "V" },
-  { id: "2", name: "NordicCraft", ip: "mc.nordiccraft.fi", players: 671, maxPlayers: 800, online: true, trend: "up", iconColor: "oklch(0.7 0.18 220)", iconLetter: "N" },
-  { id: "3", name: "SuomiSMP", ip: "play.suomismp.net", players: 528, maxPlayers: 600, online: true, trend: "down", iconColor: "oklch(0.75 0.17 60)", iconLetter: "S" },
-  { id: "4", name: "FinlandSMP", ip: "play.finlandsmp.fi", players: 412, maxPlayers: 500, online: true, trend: "up", iconColor: "oklch(0.78 0.18 165)", iconLetter: "F" },
-  { id: "5", name: "HelsinkiCraft", ip: "mc.helsinkicraft.fi", players: 387, maxPlayers: 500, online: true, trend: "flat", iconColor: "oklch(0.7 0.18 280)", iconLetter: "H" },
-  { id: "6", name: "TampereMC", ip: "play.tamperemc.fi", players: 264, maxPlayers: 400, online: true, trend: "up", iconColor: "oklch(0.7 0.18 30)", iconLetter: "T" },
-  { id: "7", name: "ArcticRealms", ip: "mc.arcticrealms.fi", players: 198, maxPlayers: 300, online: true, trend: "down", iconColor: "oklch(0.78 0.12 200)", iconLetter: "A" },
-  { id: "8", name: "OuluNetwork", ip: "play.oulunetwork.fi", players: 142, maxPlayers: 250, online: true, trend: "up", iconColor: "oklch(0.7 0.18 320)", iconLetter: "O" },
-  { id: "9", name: "MökkiCraft", ip: "mc.mokkicraft.fi", players: 87, maxPlayers: 150, online: true, trend: "flat", iconColor: "oklch(0.75 0.15 90)", iconLetter: "M" },
-  { id: "10", name: "SaunaSMP", ip: "play.saunasmp.fi", players: 0, maxPlayers: 100, online: false, trend: "down", iconColor: "oklch(0.6 0.1 30)", iconLetter: "S" },
-];
+export type ServerWithStats = DBServer & {
+  hype_count: number;
+  user_hyped: boolean;
+};
 
-export async function fetchServers(): Promise<Server[]> {
-  // TODO: Replace with live API. Simulate jitter for live feel.
-  await new Promise((r) => setTimeout(r, 600));
-  return MOCK_SERVERS.map((s) => ({
+export async function fetchServers(userId?: string | null): Promise<ServerWithStats[]> {
+  const { data: servers, error } = await supabase
+    .from("servers")
+    .select("*")
+    .order("sort_order", { ascending: true });
+  if (error) throw error;
+
+  const { data: hypes } = await supabase.from("server_hypes").select("server_id, user_id");
+  const hypeCounts = new Map<string, number>();
+  const userHypes = new Set<string>();
+  for (const h of hypes ?? []) {
+    hypeCounts.set(h.server_id, (hypeCounts.get(h.server_id) ?? 0) + 1);
+    if (userId && h.user_id === userId) userHypes.add(h.server_id);
+  }
+
+  return (servers as DBServer[]).map((s) => ({
     ...s,
-    players: s.online ? Math.max(0, s.players + Math.floor((Math.random() - 0.5) * 20)) : 0,
+    hype_count: hypeCounts.get(s.id) ?? 0,
+    user_hyped: userHypes.has(s.id),
   }));
+}
+
+export async function fetchServerBySlug(slug: string, userId?: string | null) {
+  const { data: server, error } = await supabase
+    .from("servers")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
+  if (error) throw error;
+  if (!server) return null;
+
+  const [{ count: hypeCount }, userHypeRes] = await Promise.all([
+    supabase
+      .from("server_hypes")
+      .select("*", { count: "exact", head: true })
+      .eq("server_id", server.id),
+    userId
+      ? supabase
+          .from("server_hypes")
+          .select("id")
+          .eq("server_id", server.id)
+          .eq("user_id", userId)
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+  ]);
+
+  return {
+    ...(server as DBServer),
+    hype_count: hypeCount ?? 0,
+    user_hyped: !!userHypeRes.data,
+  } satisfies ServerWithStats;
+}
+
+export async function toggleHype(serverId: string, userId: string, currentlyHyped: boolean) {
+  if (currentlyHyped) {
+    const { error } = await supabase
+      .from("server_hypes")
+      .delete()
+      .eq("server_id", serverId)
+      .eq("user_id", userId);
+    if (error) throw error;
+  } else {
+    const { error } = await supabase
+      .from("server_hypes")
+      .insert({ server_id: serverId, user_id: userId });
+    if (error) throw error;
+  }
 }
