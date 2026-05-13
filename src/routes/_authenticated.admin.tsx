@@ -44,7 +44,8 @@ function AdminPage() {
   }
 
   const updateField = async (id: string, field: keyof DBServer, value: any) => {
-    const { error } = await supabase.from("servers").update({ [field]: value }).eq("id", id);
+    const patch = { [field]: value } as any;
+    const { error } = await supabase.from("servers").update(patch).eq("id", id);
     if (error) {
       toast.error(error.message);
       return;
