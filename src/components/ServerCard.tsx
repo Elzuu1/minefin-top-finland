@@ -78,7 +78,12 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
               </span>
             )}
           </div>
-          <p className="mt-1 truncate font-mono text-xs text-muted-foreground">{server.ip}</p>
+          <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
+            {server.ip}
+            {server.port && server.port !== 25565 ? `:${server.port}` : ""}
+            {server.version ? <span className="ml-2 opacity-70">· {server.version}</span> : null}
+            {server.ping_ms != null ? <span className="ml-2 opacity-70">· {server.ping_ms}ms</span> : null}
+          </p>
         </div>
 
         <div className="hidden flex-col items-end gap-1.5 sm:flex">
