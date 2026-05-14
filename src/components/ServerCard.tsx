@@ -52,7 +52,15 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
           #{rank}
         </div>
 
-        <ServerIcon color={server.icon_color} letter={server.icon_letter} />
+        {server.favicon ? (
+          <img
+            src={server.favicon}
+            alt=""
+            className="h-12 w-12 shrink-0 rounded-xl border border-border/60 bg-black/40 object-cover [image-rendering:pixelated]"
+          />
+        ) : (
+          <ServerIcon color={server.icon_color} letter={server.icon_letter} />
+        )}
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
