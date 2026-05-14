@@ -34,6 +34,7 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
         isTop3 ? "p-6 sm:p-7 ring-1 " + (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
         isFeatured && !isTop3 ? "animate-float-glow ring-1 ring-[color:var(--neon)]/60" : "",
+        !server.online ? "grayscale opacity-60" : "",
       ].join(" ")}
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-white/5 to-transparent blur-2xl" />
