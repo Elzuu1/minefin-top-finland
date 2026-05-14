@@ -35,6 +35,9 @@ export async function fetchServers(userId?: string | null): Promise<ServerWithSt
   const { data: servers, error } = await supabase
     .from("servers")
     .select("*")
+    .eq("is_active", true)
+    .order("online", { ascending: false })
+    .order("players", { ascending: false })
     .order("sort_order", { ascending: true });
   if (error) throw error;
 
