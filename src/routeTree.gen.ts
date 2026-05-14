@@ -10,7 +10,6 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServerSlugRouteImport } from './routes/server.$slug'
@@ -18,10 +17,6 @@ import { Route as ServerSlugRouteImport } from './routes/server.$slug'
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -55,7 +50,6 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/_authenticated': typeof AuthenticatedRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
   '/server/$slug': typeof ServerSlugRoute
@@ -65,18 +59,11 @@ export interface FileRouteTypes {
   fullPaths: '/' | '/admin' | '/login' | '/server/$slug'
   fileRoutesByTo: FileRoutesByTo
   to: '/' | '/admin' | '/login' | '/server/$slug'
-  id:
-    | '__root__'
-    | '/'
-    | '/_authenticated'
-    | '/admin'
-    | '/login'
-    | '/server/$slug'
+  id: '__root__' | '/' | '/admin' | '/login' | '/server/$slug'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedRoute: typeof AuthenticatedRoute
   AdminRoute: typeof AdminRoute
   LoginRoute: typeof LoginRoute
   ServerSlugRoute: typeof ServerSlugRoute
@@ -89,13 +76,6 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated': {
-      id: '/_authenticated'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AuthenticatedRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -124,7 +104,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthenticatedRoute: AuthenticatedRoute,
   AdminRoute: AdminRoute,
   LoginRoute: LoginRoute,
   ServerSlugRoute: ServerSlugRoute,
@@ -132,3 +111,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
