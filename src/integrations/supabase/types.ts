@@ -141,18 +141,25 @@ export type Database = {
       servers: {
         Row: {
           banner_url: string | null
+          category: string | null
           created_at: string
           description: string | null
           discord_url: string | null
+          favicon: string | null
           icon_color: string
           icon_letter: string
           id: string
           ip: string
+          is_active: boolean
           is_featured: boolean
+          last_checked: string | null
           max_players: number
+          motd: string | null
           name: string
           online: boolean
+          ping_ms: number | null
           players: number
+          port: number
           slug: string
           sort_order: number
           trend: string
@@ -161,18 +168,25 @@ export type Database = {
         }
         Insert: {
           banner_url?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
           discord_url?: string | null
+          favicon?: string | null
           icon_color?: string
           icon_letter?: string
           id?: string
           ip: string
+          is_active?: boolean
           is_featured?: boolean
+          last_checked?: string | null
           max_players?: number
+          motd?: string | null
           name: string
           online?: boolean
+          ping_ms?: number | null
           players?: number
+          port?: number
           slug: string
           sort_order?: number
           trend?: string
@@ -181,18 +195,25 @@ export type Database = {
         }
         Update: {
           banner_url?: string | null
+          category?: string | null
           created_at?: string
           description?: string | null
           discord_url?: string | null
+          favicon?: string | null
           icon_color?: string
           icon_letter?: string
           id?: string
           ip?: string
+          is_active?: boolean
           is_featured?: boolean
+          last_checked?: string | null
           max_players?: number
+          motd?: string | null
           name?: string
           online?: boolean
+          ping_ms?: number | null
           players?: number
+          port?: number
           slug?: string
           sort_order?: number
           trend?: string

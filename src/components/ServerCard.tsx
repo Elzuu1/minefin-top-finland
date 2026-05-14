@@ -34,6 +34,7 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
         isTop3 ? "p-6 sm:p-7 ring-1 " + (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
         isFeatured && !isTop3 ? "animate-float-glow ring-1 ring-[color:var(--neon)]/60" : "",
+        !server.online ? "grayscale opacity-60" : "",
       ].join(" ")}
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-white/5 to-transparent blur-2xl" />
@@ -52,7 +53,15 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
           #{rank}
         </div>
 
-        <ServerIcon color={server.icon_color} letter={server.icon_letter} />
+        {server.favicon ? (
+          <img
+            src={server.favicon}
+            alt=""
+            className="h-12 w-12 shrink-0 rounded-xl border border-border/60 bg-black/40 object-cover [image-rendering:pixelated]"
+          />
+        ) : (
+          <ServerIcon color={server.icon_color} letter={server.icon_letter} />
+        )}
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
@@ -70,7 +79,12 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
               </span>
             )}
           </div>
-          <p className="mt-1 truncate font-mono text-xs text-muted-foreground">{server.ip}</p>
+          <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
+            {server.ip}
+            {server.port && server.port !== 25565 ? `:${server.port}` : ""}
+            {server.version ? <span className="ml-2 opacity-70">· {server.version}</span> : null}
+            {server.ping_ms != null ? <span className="ml-2 opacity-70">· {server.ping_ms}ms</span> : null}
+          </p>
         </div>
 
         <div className="hidden flex-col items-end gap-1.5 sm:flex">

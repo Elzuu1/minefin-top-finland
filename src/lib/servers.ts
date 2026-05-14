@@ -5,6 +5,7 @@ export type DBServer = {
   slug: string;
   name: string;
   ip: string;
+  port: number;
   description: string | null;
   version: string | null;
   discord_url: string | null;
@@ -12,11 +13,17 @@ export type DBServer = {
   icon_color: string;
   icon_letter: string;
   is_featured: boolean;
+  is_active: boolean;
+  category: string | null;
   players: number;
   max_players: number;
   online: boolean;
   trend: string;
   sort_order: number;
+  motd: string | null;
+  favicon: string | null;
+  ping_ms: number | null;
+  last_checked: string | null;
 };
 
 export type ServerWithStats = DBServer & {
@@ -28,6 +35,9 @@ export async function fetchServers(userId?: string | null): Promise<ServerWithSt
   const { data: servers, error } = await supabase
     .from("servers")
     .select("*")
+    .eq("is_active", true)
+    .order("online", { ascending: false })
+    .order("players", { ascending: false })
     .order("sort_order", { ascending: true });
   if (error) throw error;
 

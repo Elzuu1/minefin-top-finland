@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { fetchServers, type ServerWithStats } from "@/lib/servers";
+import { refreshAllServers } from "@/lib/ping.functions";
 import { useAuth } from "@/lib/auth";
 import { ServerCard } from "./ServerCard";
 
@@ -13,22 +15,32 @@ function Skeleton() {
 
 export function Leaderboard() {
   const { user } = useAuth();
+  const refresh = useServerFn(refreshAllServers);
   const [servers, setServers] = useState<ServerWithStats[] | null>(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
 
-  const load = async () => {
+  const reload = async () => {
+    const data = await fetchServers(user?.id);
+    setServers(data);
+  };
+
+  const tick = async () => {
     setRefreshing(true);
     try {
-      const data = await fetchServers(user?.id);
-      setServers(data);
+      await refresh().catch(() => null); // best-effort live ping
+      await reload();
+      setLastChecked(new Date());
     } finally {
       setRefreshing(false);
     }
   };
 
   useEffect(() => {
-    load();
-    const id = setInterval(load, 30000);
+    // First paint: show cached data fast, then ping in background.
+    reload();
+    tick();
+    const id = setInterval(tick, 45_000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
@@ -54,7 +66,11 @@ export function Leaderboard() {
               refreshing ? "bg-[color:var(--neon)] animate-pulse-dot" : "bg-[color:var(--success)]",
             ].join(" ")}
           />
-          {refreshing ? "Päivitetään…" : "Live · 30s välein"}
+          {refreshing
+            ? "Pingataan…"
+            : lastChecked
+              ? `Live · päivitetty ${lastChecked.toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
+              : "Live · 45s välein"}
         </div>
       </div>
 
