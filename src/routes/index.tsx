@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AdminLockButton } from "@/components/AdminLockButton";
 import { Hero } from "@/components/Hero";
 import { Leaderboard } from "@/components/Leaderboard";
 import { MuutServut } from "@/components/MuutServut";
