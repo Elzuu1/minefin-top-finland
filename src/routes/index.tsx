@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { AdminLockButton } from "@/components/AdminLockButton";
 import { Hero } from "@/components/Hero";
 import { Leaderboard } from "@/components/Leaderboard";
 import { MuutServut } from "@/components/MuutServut";
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <main className="min-h-screen">
+      <AdminLockButton />
       <SiteHeader />
       <Hero />
       <Leaderboard />
