@@ -40,7 +40,7 @@ export function Leaderboard() {
     // First paint: show cached data fast, then ping in background.
     reload();
     tick();
-    const id = setInterval(tick, 45_000);
+    const id = setInterval(tick, 30_000);
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
@@ -70,7 +70,7 @@ export function Leaderboard() {
             ? "Pingataan…"
             : lastChecked
               ? `Live · päivitetty ${lastChecked.toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
-              : "Live · 45s välein"}
+              : "Live · 30s välein"}
         </div>
       </div>
 
