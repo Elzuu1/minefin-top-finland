@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Lock, Eye, EyeOff, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
-const ADMIN_PASSWORD = "123.OOOKKEooooo2.!!";
+const ADMIN_PASSWORD = "123.OOOKKEooooo2.!";
 
 export function AdminLockButton() {
   const [open, setOpen] = useState(false);
