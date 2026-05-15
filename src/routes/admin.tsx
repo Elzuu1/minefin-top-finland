@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshAllServers } from "@/lib/ping.functions";
 import type { DBServer } from "@/lib/servers";
+import { AdminPasswordGate } from "@/components/AdminPasswordGate";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
