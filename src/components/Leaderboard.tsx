@@ -70,7 +70,7 @@ export function Leaderboard() {
             ? "Pingataan…"
             : lastChecked
               ? `Live · päivitetty ${lastChecked.toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
-              : "Live · 45s välein"}
+              : "Live · 30s välein"}
         </div>
       </div>
 
