@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { Lock, Eye, EyeOff, X } from "lucide-react";
 
-export const ADMIN_PASSWORD = "123.OOOKKEooooo2.!!";
+export const ADMIN_PASSWORD = "123.OOOKKEooooo2.!";
 
 export function AdminPasswordGate({ onSuccess }: { onSuccess: () => void }) {
   const [password, setPassword] = useState("");
