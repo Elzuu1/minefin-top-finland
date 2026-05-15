@@ -54,12 +54,8 @@ function AdminPage() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("admin_access") !== "true") {
-      navigate({ to: "/" });
-      return;
-    }
-    setAuthed(true);
-  }, [navigate]);
+    if (sessionStorage.getItem("admin_access") === "true") setAuthed(true);
+  }, []);
 
   const load = async () => {
     const { data } = await supabase.from("servers").select("*").order("sort_order");
@@ -70,7 +66,7 @@ function AdminPage() {
     if (authed) load();
   }, [authed]);
 
-  if (!authed) return null;
+  if (!authed) return <AdminPasswordGate onSuccess={() => setAuthed(true)} />;
 
   const logout = () => {
     sessionStorage.removeItem("admin_access");
