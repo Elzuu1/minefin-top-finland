@@ -14,6 +14,23 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
   const isTop3 = rank <= 3;
   const isFeatured = server.is_featured;
   const style = RANK_STYLES[rank];
+  const statusLabel = server.live_loading
+    ? "Loading"
+    : server.live_error
+      ? "Error"
+      : server.online
+        ? "Online"
+        : "OFFLINE";
+  const statusColor = server.live_loading
+    ? "text-[color:var(--neon)]"
+    : server.live_error || !server.online
+      ? "text-[color:var(--danger)]"
+      : "text-[color:var(--success)]";
+  const statusDot = server.live_loading
+    ? "bg-[color:var(--neon)] animate-pulse-dot"
+    : server.live_error || !server.online
+      ? "bg-[color:var(--danger)]"
+      : "bg-[color:var(--success)] animate-pulse-dot";
 
   const TrendIcon =
     server.trend === "up" ? ArrowUp : server.trend === "down" ? ArrowDown : Minus;
@@ -34,7 +51,7 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
         isTop3 ? "p-6 sm:p-7 ring-1 " + (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
         isFeatured && !isTop3 ? "animate-float-glow ring-1 ring-[color:var(--neon)]/60" : "",
-        !server.online ? "grayscale opacity-60" : "",
+        !server.online && !server.live_loading ? "grayscale opacity-60" : "",
       ].join(" ")}
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-white/5 to-transparent blur-2xl" />
@@ -85,12 +102,21 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
             {server.version ? <span className="ml-2 opacity-70">· {server.version}</span> : null}
             {server.ping_ms != null ? <span className="ml-2 opacity-70">· {server.ping_ms}ms</span> : null}
           </p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">
+            {server.live_loading
+              ? "Haetaan live dataa…"
+              : server.live_error
+                ? server.live_error
+                : server.online
+                  ? server.motd || "Live data aktiivinen"
+                  : "Serveri ei vastaa juuri nyt"}
+          </p>
         </div>
 
         <div className="hidden flex-col items-end gap-1.5 sm:flex">
           <div className="flex items-baseline gap-1.5">
             <span className={["font-mono text-2xl font-bold tabular-nums", isTop3 ? "text-3xl" : ""].join(" ")}>
-              {server.players.toLocaleString()}
+              {server.live_loading ? "…" : server.players.toLocaleString()}
             </span>
             <span className="text-xs text-muted-foreground">/ {server.max_players}</span>
           </div>
@@ -100,14 +126,9 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
             </span>
             <span className="inline-flex items-center gap-1.5">
               <span
-                className={[
-                  "h-2 w-2 rounded-full",
-                  server.online ? "bg-[color:var(--success)] animate-pulse-dot" : "bg-[color:var(--danger)]",
-                ].join(" ")}
+                className={["h-2 w-2 rounded-full", statusDot].join(" ")}
               />
-              <span className={server.online ? "text-[color:var(--success)]" : "text-[color:var(--danger)]"}>
-                {server.online ? "Online" : "Offline"}
-              </span>
+              <span className={statusColor}>{statusLabel}</span>
             </span>
           </div>
         </div>
@@ -115,14 +136,14 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
 
       <div className="mt-4 flex items-center justify-between gap-3 sm:mt-4">
         <div className="flex items-center gap-2 sm:hidden">
-          <span className="font-mono text-xl font-bold tabular-nums">{server.players.toLocaleString()}</span>
+          <span className="font-mono text-xl font-bold tabular-nums">
+            {server.live_loading ? "…" : server.players.toLocaleString()}
+          </span>
           <span className="text-xs text-muted-foreground">/ {server.max_players}</span>
           <span
-            className={[
-              "ml-1 h-2 w-2 rounded-full",
-              server.online ? "bg-[color:var(--success)] animate-pulse-dot" : "bg-[color:var(--danger)]",
-            ].join(" ")}
+            className={["ml-1 h-2 w-2 rounded-full", statusDot].join(" ")}
           />
+          <span className={["text-[10px] font-semibold uppercase", statusColor].join(" ")}>{statusLabel}</span>
         </div>
 
         <HypeButton
