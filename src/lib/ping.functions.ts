@@ -1,44 +1,61 @@
 import { createServerFn } from "@tanstack/react-start";
+import { status } from "minecraft-server-util";
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-type McsrvstatResponse = {
+type McStatusIoResponse = {
   online: boolean;
-  players?: { online?: number; max?: number; list?: { name: string }[] };
-  version?: string;
-  motd?: { clean?: string[] };
+  players?: { online?: number; max?: number };
+  version?: { name_clean?: string; name_raw?: string };
+  motd?: { clean?: string; raw?: string };
   icon?: string;
-  debug?: { ping?: boolean };
 };
 
-async function pingOne(ip: string, port: number) {
+async function pingViaHttpFallback(ip: string, port: number) {
   const host = port && port !== 25565 ? `${ip}:${port}` : ip;
   const start = Date.now();
+  const res = await fetch(`https://api.mcstatus.io/v2/status/java/${host}`, {
+    headers: { "user-agent": "Minefin/1.0" },
+  });
+  if (!res.ok) throw new Error(`fallback status ${res.status}`);
+  const data = (await res.json()) as McStatusIoResponse;
+  if (!data.online) throw new Error("offline");
+  return {
+    online: true,
+    players: data.players?.online ?? 0,
+    max_players: data.players?.max ?? 0,
+    version: data.version?.name_clean ?? data.version?.name_raw ?? null,
+    motd: data.motd?.clean ?? data.motd?.raw ?? null,
+    favicon: data.icon ?? null,
+    ping_ms: Date.now() - start,
+  };
+}
+
+async function pingOne(ip: string, port: number) {
   try {
-    const res = await fetch(`https://api.mcsrvstat.us/3/${host}`, {
-      headers: { "user-agent": "Minefin/1.0" },
-    });
-    if (!res.ok) throw new Error(`status ${res.status}`);
-    const data = (await res.json()) as McsrvstatResponse;
-    const ping = Date.now() - start;
+    const data = await status(ip, port ?? 25565, { timeout: 8_000, enableSRV: true });
     return {
-      online: !!data.online,
-      players: data.players?.online ?? 0,
-      max_players: data.players?.max ?? 0,
-      version: data.version ?? null,
-      motd: data.motd?.clean?.join("\n") ?? null,
-      favicon: data.icon ?? null,
-      ping_ms: ping,
+      online: true,
+      players: data.players.online,
+      max_players: data.players.max,
+      version: data.version.name,
+      motd: data.motd.clean,
+      favicon: data.favicon ?? null,
+      ping_ms: data.roundTripLatency,
     };
   } catch {
-    return {
-      online: false,
-      players: 0,
-      max_players: 0,
-      version: null,
-      motd: null,
-      favicon: null,
-      ping_ms: null,
-    };
+    try {
+      return await pingViaHttpFallback(ip, port ?? 25565);
+    } catch {
+      return {
+        online: false,
+        players: 0,
+        max_players: 0,
+        version: null,
+        motd: null,
+        favicon: null,
+        ping_ms: null,
+      };
+    }
   }
 }
 
