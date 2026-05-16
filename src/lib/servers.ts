@@ -29,6 +29,8 @@ export type DBServer = {
 export type ServerWithStats = DBServer & {
   hype_count: number;
   user_hyped: boolean;
+  live_loading?: boolean;
+  live_error?: string | null;
 };
 
 export async function fetchServers(userId?: string | null): Promise<ServerWithStats[]> {
