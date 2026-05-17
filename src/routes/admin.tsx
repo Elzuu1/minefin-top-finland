@@ -1,11 +1,18 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import { LogOut, Plus, RefreshCw, Shield, Star, Trash2, Users, Zap } from "lucide-react";
+import { Check, Inbox, LogOut, Plus, RefreshCw, Shield, Star, Trash2, Users, X, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshAllServers } from "@/lib/ping.functions";
 import type { DBServer } from "@/lib/servers";
+import {
+  approveSubmission,
+  deleteSubmission,
+  fetchSubmissions,
+  rejectSubmission,
+  type ServerSubmission,
+} from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
 
 export const Route = createFileRoute("/admin")({
