@@ -56,9 +56,11 @@ function AdminPage() {
   const refresh = useServerFn(refreshAllServers);
   const [authed, setAuthed] = useState(false);
   const [servers, setServers] = useState<DBServer[] | null>(null);
+  const [submissions, setSubmissions] = useState<ServerSubmission[] | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [adding, setAdding] = useState(false);
   const [pinging, setPinging] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -70,8 +72,20 @@ function AdminPage() {
     setServers((data ?? []) as DBServer[]);
   };
 
+  const loadSubmissions = async () => {
+    try {
+      const data = await fetchSubmissions();
+      setSubmissions(data);
+    } catch (err: any) {
+      toast.error(err?.message ?? "Ehdotusten lataus epäonnistui");
+    }
+  };
+
   useEffect(() => {
-    if (authed) load();
+    if (authed) {
+      load();
+      loadSubmissions();
+    }
   }, [authed]);
 
   if (!authed) return <AdminPasswordGate onSuccess={() => setAuthed(true)} />;
