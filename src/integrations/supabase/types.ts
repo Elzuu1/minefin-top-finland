@@ -138,6 +138,60 @@ export type Database = {
           },
         ]
       }
+      server_submissions: {
+        Row: {
+          banner_url: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          id: string
+          ip: string
+          logo_url: string | null
+          name: string
+          port: number
+          review_note: string | null
+          reviewed_at: string | null
+          status: Database["public"]["Enums"]["submission_status"]
+          updated_at: string
+          user_id: string
+          version: string | null
+        }
+        Insert: {
+          banner_url?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          ip: string
+          logo_url?: string | null
+          name: string
+          port?: number
+          review_note?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["submission_status"]
+          updated_at?: string
+          user_id: string
+          version?: string | null
+        }
+        Update: {
+          banner_url?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          ip?: string
+          logo_url?: string | null
+          name?: string
+          port?: number
+          review_note?: string | null
+          reviewed_at?: string | null
+          status?: Database["public"]["Enums"]["submission_status"]
+          updated_at?: string
+          user_id?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
       servers: {
         Row: {
           banner_url: string | null
@@ -258,6 +312,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      submission_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -386,6 +441,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      submission_status: ["pending", "approved", "rejected"],
     },
   },
 } as const
