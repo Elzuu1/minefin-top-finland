@@ -152,9 +152,47 @@ function AdminPage() {
     }
   };
 
+  const onApprove = async (sub: ServerSubmission) => {
+    setProcessingId(sub.id);
+    try {
+      await approveSubmission(sub);
+      toast.success(`Hyväksytty: ${sub.name}`);
+      await Promise.all([load(), loadSubmissions()]);
+    } catch (err: any) {
+      toast.error(err?.message ?? "Hyväksyntä epäonnistui");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const onReject = async (sub: ServerSubmission) => {
+    const note = prompt(`Hylkää "${sub.name}"? Anna halutessasi syy:`, "") ?? undefined;
+    setProcessingId(sub.id);
+    try {
+      await rejectSubmission(sub.id, note || undefined);
+      toast.success("Hylätty");
+      await loadSubmissions();
+    } catch (err: any) {
+      toast.error(err?.message ?? "Hylkäys epäonnistui");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  const onDeleteSubmission = async (id: string) => {
+    if (!confirm("Poistetaanko ehdotus pysyvästi?")) return;
+    try {
+      await deleteSubmission(id);
+      await loadSubmissions();
+    } catch (err: any) {
+      toast.error(err?.message ?? "Poisto epäonnistui");
+    }
+  };
+
   const totalPlayers = servers?.reduce((sum, s) => sum + (s.online ? s.players : 0), 0) ?? 0;
   const onlineCount = servers?.filter((s) => s.online).length ?? 0;
   const featuredCount = servers?.filter((s) => s.is_featured).length ?? 0;
+  const pendingCount = submissions?.filter((s) => s.status === "pending").length ?? 0;
 
   return (
     <main className="min-h-screen bg-background">
