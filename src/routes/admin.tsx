@@ -508,3 +508,17 @@ function Field({
     </label>
   );
 }
+
+function SubmissionStatusBadge({ status }: { status: ServerSubmission["status"] }) {
+  const map = {
+    pending: { label: "Odottaa", cls: "bg-amber-500/15 text-amber-300" },
+    approved: { label: "Hyväksytty", cls: "bg-[color:var(--neon)]/15 text-[color:var(--neon)]" },
+    rejected: { label: "Hylätty", cls: "bg-red-500/15 text-red-300" },
+  } as const;
+  const { label, cls } = map[status];
+  return (
+    <span className={["rounded-full px-2 py-0.5 text-[10px] font-bold uppercase", cls].join(" ")}>
+      {label}
+    </span>
+  );
+}
