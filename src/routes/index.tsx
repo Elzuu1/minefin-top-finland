@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { Leaderboard } from "@/components/Leaderboard";
 import { MuutServut } from "@/components/MuutServut";
 import { SiteHeader } from "@/components/SiteHeader";
+import { SubmitServerButton } from "@/components/SubmitServerButton";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,8 +28,9 @@ function Index() {
       <AdminLockButton />
       <SiteHeader />
       <Hero />
-      <Leaderboard />
-      <MuutServut />
+        <Leaderboard />
+        <SubmitServerButton />
+        <MuutServut />
       <footer className="border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} Minefin · Suomen Minecraft-yhteisön leaderboardit
       </footer>
