@@ -226,7 +226,7 @@ function AdminPage() {
           </div>
         </div>
 
-        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div className="mb-8 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard icon={<Users className="h-4 w-4" />} label="Pelaajia online" value={totalPlayers} />
           <StatCard
             icon={<Shield className="h-4 w-4" />}
@@ -234,6 +234,99 @@ function AdminPage() {
             value={`${onlineCount} / ${servers?.length ?? 0}`}
           />
           <StatCard icon={<Star className="h-4 w-4" />} label="Featured" value={featuredCount} />
+          <StatCard icon={<Inbox className="h-4 w-4" />} label="Odottavat ehdotukset" value={pendingCount} />
+        </div>
+
+        {/* Pending submissions */}
+        <div className="mb-8 overflow-hidden rounded-2xl border border-white/10 bg-black/40 backdrop-blur-xl">
+          <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <h2 className="flex items-center gap-2 font-display text-lg font-semibold">
+              <Inbox className="h-4 w-4 text-[color:var(--neon)]" />
+              Käyttäjien serveriehdotukset
+              {pendingCount > 0 && (
+                <span className="rounded-full bg-[color:var(--neon)]/15 px-2 py-0.5 text-xs font-bold text-[color:var(--neon)]">
+                  {pendingCount} uutta
+                </span>
+              )}
+            </h2>
+          </div>
+          {submissions === null ? (
+            <div className="px-5 py-6 text-sm text-muted-foreground">Ladataan…</div>
+          ) : submissions.length === 0 ? (
+            <div className="px-5 py-6 text-sm text-muted-foreground">Ei ehdotuksia vielä.</div>
+          ) : (
+            <ul className="divide-y divide-white/5">
+              {submissions.map((s) => (
+                <li key={s.id} className="px-5 py-4">
+                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <p className="font-bold">{s.name}</p>
+                        <SubmissionStatusBadge status={s.status} />
+                        {s.category && (
+                          <span className="rounded-full bg-white/5 px-2 py-0.5 text-[10px] font-mono uppercase text-muted-foreground">
+                            {s.category}
+                          </span>
+                        )}
+                      </div>
+                      <p className="mt-1 font-mono text-xs text-muted-foreground">
+                        {s.ip}:{s.port} {s.version ? `· v${s.version}` : ""}
+                      </p>
+                      {s.description && (
+                        <p className="mt-2 text-sm text-white/80">{s.description}</p>
+                      )}
+                      {(s.banner_url || s.logo_url) && (
+                        <div className="mt-2 flex gap-2 text-xs">
+                          {s.banner_url && (
+                            <a href={s.banner_url} target="_blank" rel="noreferrer" className="text-[color:var(--neon)] underline">
+                              Banneri
+                            </a>
+                          )}
+                          {s.logo_url && (
+                            <a href={s.logo_url} target="_blank" rel="noreferrer" className="text-[color:var(--neon)] underline">
+                              Logo
+                            </a>
+                          )}
+                        </div>
+                      )}
+                      <p className="mt-1 text-[10px] text-muted-foreground">
+                        Lähetetty: {new Date(s.created_at).toLocaleString("fi-FI")}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 gap-2">
+                      {s.status === "pending" && (
+                        <>
+                          <button
+                            onClick={() => onApprove(s)}
+                            disabled={processingId === s.id}
+                            className="inline-flex items-center gap-1 rounded-lg border border-[color:var(--neon)]/40 bg-[color:var(--neon)]/15 px-3 py-1.5 text-xs font-bold text-[color:var(--neon)] transition hover:bg-[color:var(--neon)]/25 disabled:opacity-50"
+                          >
+                            <Check className="h-3.5 w-3.5" />
+                            Hyväksy
+                          </button>
+                          <button
+                            onClick={() => onReject(s)}
+                            disabled={processingId === s.id}
+                            className="inline-flex items-center gap-1 rounded-lg border border-red-500/40 bg-red-500/10 px-3 py-1.5 text-xs font-bold text-red-300 transition hover:bg-red-500/20 disabled:opacity-50"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                            Hylkää
+                          </button>
+                        </>
+                      )}
+                      <button
+                        onClick={() => onDeleteSubmission(s.id)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 py-1.5 text-xs font-semibold text-white/60 transition hover:text-white"
+                        title="Poista ehdotus"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         {/* Add server */}
