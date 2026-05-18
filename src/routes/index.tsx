@@ -1,8 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminLockButton } from "@/components/AdminLockButton";
+import { FounderCard } from "@/components/FounderCard";
 import { Hero } from "@/components/Hero";
 import { Leaderboard } from "@/components/Leaderboard";
 import { MuutServut } from "@/components/MuutServut";
+import { RollingBanner } from "@/components/RollingBanner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SubmitServerButton } from "@/components/SubmitServerButton";
 
@@ -28,9 +30,11 @@ function Index() {
       <AdminLockButton />
       <SiteHeader />
       <Hero />
-        <Leaderboard />
-        <SubmitServerButton />
-        <MuutServut />
+      <FounderCard />
+      <RollingBanner />
+      <Leaderboard />
+      <SubmitServerButton />
+      <MuutServut />
       <footer className="border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} Minefin · Suomen Minecraft-yhteisön leaderboardit
       </footer>
