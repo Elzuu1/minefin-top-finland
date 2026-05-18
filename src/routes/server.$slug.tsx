@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowLeft, ArrowUp, Copy, ExternalLink, Minus } from "lucide-react";
 import { toast } from "sonner";
 import { fetchServerBySlug, type ServerWithStats } from "@/lib/servers";
 import { useAuth } from "@/lib/auth";
+import { useHypeRealtime } from "@/lib/use-hype-realtime";
 import { ServerIcon } from "@/components/ServerIcon";
 import { HypeButton } from "@/components/HypeButton";
 import { CommentsSection } from "@/components/CommentsSection";
@@ -18,6 +19,10 @@ function ServerProfile() {
   const { user } = useAuth();
   const [server, setServer] = useState<ServerWithStats | null | "missing">(null);
 
+  const reload = useCallback(() => {
+    fetchServerBySlug(slug, user?.id).then((s) => setServer(s ?? "missing"));
+  }, [slug, user?.id]);
+
   useEffect(() => {
     let cancelled = false;
     fetchServerBySlug(slug, user?.id).then((s) => {
@@ -28,6 +33,19 @@ function ServerProfile() {
       cancelled = true;
     };
   }, [slug, user?.id]);
+
+  const hypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const currentServerId = typeof server === "object" && server ? server.id : null;
+  useHypeRealtime(
+    useCallback(
+      (changedId) => {
+        if (changedId !== currentServerId) return;
+        if (hypeTimer.current) clearTimeout(hypeTimer.current);
+        hypeTimer.current = setTimeout(reload, 250);
+      },
+      [currentServerId, reload],
+    ),
+  );
 
   if (server === null) {
     return (
