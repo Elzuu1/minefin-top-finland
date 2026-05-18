@@ -14,6 +14,7 @@ import {
   type ServerSubmission,
 } from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
+import { BannersAdmin } from "@/components/BannersAdmin";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
@@ -465,6 +466,8 @@ function AdminPage() {
             </table>
           </div>
         </div>
+
+        <BannersAdmin />
       </div>
     </main>
   );

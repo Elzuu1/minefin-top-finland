@@ -36,19 +36,8 @@ export function Hero() {
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
         </a>
 
-        <div
-          className="mt-14 inline-flex items-center gap-3 rounded-2xl border border-border bg-card/70 px-4 py-3 text-left backdrop-blur animate-rise"
-          style={{ animationDelay: "320ms" }}
-        >
-          <div className="grid h-10 w-10 place-items-center rounded-lg bg-gradient-to-br from-[color:var(--neon)] to-[color:var(--neon-2)] font-mono text-sm font-black text-background">
-            E
-          </div>
-          <div>
-            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Created by</p>
-            <p className="text-sm font-semibold">Elzuu1</p>
-          </div>
-        </div>
       </div>
     </section>
   );
 }
+

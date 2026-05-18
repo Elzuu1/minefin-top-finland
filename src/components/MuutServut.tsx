@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Search, Filter } from "lucide-react";
 import { fetchServers, type ServerWithStats } from "@/lib/servers";
 import { useAuth } from "@/lib/auth";
+import { useHypeRealtime } from "@/lib/use-hype-realtime";
 import { ServerIcon } from "./ServerIcon";
 import { HypeButton } from "./HypeButton";
 
@@ -16,9 +17,21 @@ export function MuutServut() {
   const [statusFilter, setStatusFilter] = useState<"all" | "online" | "offline">("all");
   const [visible, setVisible] = useState(PAGE_SIZE);
 
-  useEffect(() => {
-    fetchServers(user?.id).then(setServers);
+  const reload = useCallback(() => {
+    fetchServers(user?.id).then(setServers).catch(() => {});
   }, [user?.id]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  const hypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useHypeRealtime(
+    useCallback(() => {
+      if (hypeTimer.current) clearTimeout(hypeTimer.current);
+      hypeTimer.current = setTimeout(reload, 250);
+    }, [reload]),
+  );
 
   const rest = useMemo(() => servers?.slice(10) ?? [], [servers]);
 

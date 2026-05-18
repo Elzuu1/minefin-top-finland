@@ -42,10 +42,17 @@ export function SiteHeader() {
 
           {user ? (
             <div className="flex items-center gap-2">
-              <div className="hidden items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs sm:flex">
-                <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
+              <Link
+                to="/profile"
+                className="hidden items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs transition-colors hover:border-[color:var(--neon)]/60 sm:flex"
+              >
+                {profile?.avatar_url ? (
+                  <img src={profile.avatar_url} alt="" className="h-4 w-4 rounded-full object-cover" />
+                ) : (
+                  <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                )}
                 <span className="font-semibold">{profile?.display_name ?? profile?.username ?? "Pelaaja"}</span>
-              </div>
+              </Link>
               <button
                 onClick={signOut}
                 className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
