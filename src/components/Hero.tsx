@@ -40,8 +40,4 @@ export function Hero() {
     </section>
   );
 }
-//
-      </div>
-    </section>
-  );
-}
+
