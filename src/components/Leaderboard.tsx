@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { fetchServers, type ServerWithStats } from "@/lib/servers";
 import { refreshAllServers } from "@/lib/ping.functions";
 import { useAuth } from "@/lib/auth";
+import { useHypeRealtime } from "@/lib/use-hype-realtime";
 import { ServerCard } from "./ServerCard";
 
 type MinecraftStatusResponse = {
@@ -122,6 +123,17 @@ export function Leaderboard() {
     return () => clearInterval(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+  // Debounced reload triggered by realtime hype changes.
+  const hypeReloadTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onHypeChange = useCallback(() => {
+    if (hypeReloadTimer.current) clearTimeout(hypeReloadTimer.current);
+    hypeReloadTimer.current = setTimeout(() => {
+      reload().catch(() => {});
+    }, 250);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.id]);
+  useHypeRealtime(onHypeChange);
 
   const top10 = servers?.slice(0, 10) ?? null;
 
