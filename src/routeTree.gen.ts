@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServerSlugRouteImport } from './routes/server.$slug'
 import { Route as ApiMinecraftStatusRouteImport } from './routes/api/minecraft-status'
 
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -45,6 +51,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
 }
@@ -52,6 +59,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
 }
@@ -60,6 +68,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/login': typeof LoginRoute
+  '/profile': typeof ProfileRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
 }
@@ -69,15 +78,23 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/login'
+    | '/profile'
     | '/api/minecraft-status'
     | '/server/$slug'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/login' | '/api/minecraft-status' | '/server/$slug'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/profile'
+    | '/api/minecraft-status'
+    | '/server/$slug'
   id:
     | '__root__'
     | '/'
     | '/admin'
     | '/login'
+    | '/profile'
     | '/api/minecraft-status'
     | '/server/$slug'
   fileRoutesById: FileRoutesById
@@ -86,12 +103,20 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   LoginRoute: typeof LoginRoute
+  ProfileRoute: typeof ProfileRoute
   ApiMinecraftStatusRoute: typeof ApiMinecraftStatusRoute
   ServerSlugRoute: typeof ServerSlugRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -134,6 +159,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   LoginRoute: LoginRoute,
+  ProfileRoute: ProfileRoute,
   ApiMinecraftStatusRoute: ApiMinecraftStatusRoute,
   ServerSlugRoute: ServerSlugRoute,
 }
