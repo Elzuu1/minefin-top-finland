@@ -8,13 +8,14 @@ import { supabase } from "@/integrations/supabase/client";
  */
 export function useHypeRealtime(onChange: (serverId: string) => void) {
   useEffect(() => {
+    const channelName = `hype-realtime-${Math.random().toString(36).slice(2)}-${Date.now()}`;
     const channel = supabase
-      .channel("hype-realtime")
+      .channel(channelName)
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "server_hypes" },
         (payload) => {
-          const row: any = payload.new ?? payload.old;
+          const row: any = (payload.new ?? payload.old) as any;
           const serverId = row?.server_id as string | undefined;
           if (serverId) onChange(serverId);
         },
