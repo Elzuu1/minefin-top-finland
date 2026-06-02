@@ -1,12 +1,11 @@
 import { Crown, Sparkles } from "lucide-react";
+import elzuuSkinAsset from "@/assets/elzuu-skin.jpg.asset.json";
 
 /**
- * Premium Elzuu1 founder/spotlight card. Renders a Minecraft body skin from
- * Crafatar (no external assets bundled). Cinematic, animated, mobile-clean.
+ * Premium Elzuu1 founder/spotlight card. Cinematic, animated, mobile-clean.
  */
 export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
-  // Crafatar public body render — works for any known Minecraft username
-  const skinUrl = `https://crafatar.com/renders/body/8667ba71-b85a-4004-af54-457a9734eed7?scale=10&overlay`;
+  const skinUrl = elzuuSkinAsset.url;
 
   return (
     <section className="relative mx-auto w-full max-w-5xl px-4 py-8 sm:py-10">
