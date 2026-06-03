@@ -1,0 +1,1 @@
+UPDATE public.banners SET text = 'FinlandSMP - Kandeee koklaa 👌' WHERE is_active = true;
