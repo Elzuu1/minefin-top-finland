@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Megaphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchActiveBanners, type Banner } from "@/lib/banners";
 
@@ -31,17 +30,11 @@ export function RollingBanner() {
   return (
     <section className="relative mx-auto w-full max-w-5xl px-3 pt-3 sm:px-4 sm:pt-4">
       <div className="group relative overflow-hidden rounded-lg border border-[color:var(--neon)]/30 bg-gradient-to-r from-black/70 via-[color:var(--neon)]/5 to-black/70 py-1.5 backdrop-blur-xl sm:rounded-xl sm:py-2">
-        <div className="absolute left-0 top-0 z-10 flex h-full items-center gap-1 bg-gradient-to-r from-black via-black/85 to-transparent pl-2 pr-4 sm:gap-1.5 sm:pl-3 sm:pr-6">
-          <Megaphone className="h-3 w-3 text-[color:var(--neon)] sm:h-3.5 sm:w-3.5" />
-          <span className="font-mono text-[9px] font-bold uppercase tracking-widest text-[color:var(--neon)] sm:text-[10px]">
-            Live
-          </span>
-        </div>
-
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-8 bg-gradient-to-r from-black via-black/80 to-transparent sm:w-12" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-8 bg-gradient-to-l from-black via-black/80 to-transparent sm:w-12" />
 
         <div
-          className="flex w-max items-center whitespace-nowrap pl-16 will-change-transform sm:pl-20"
+          className="flex w-max items-center whitespace-nowrap will-change-transform"
           style={{ animation: `banner-marquee ${speed}s linear infinite` }}
         >
           {loop.map((b, i) => {
