@@ -31,6 +31,7 @@ function Index() {
       <AdminLockButton />
       <SiteHeader />
       <Hero />
+      <TotalPlayers />
       <FounderCard />
       <RollingBanner />
       <Leaderboard />
