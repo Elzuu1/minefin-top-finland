@@ -46,12 +46,12 @@ export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
             </div>
 
             <div className="space-y-1">
-              <h2 className="font-display text-4xl font-black tracking-tight transition-all duration-500 group-hover:scale-105 sm:text-6xl">
+              <h2 className="font-display text-3xl font-black tracking-tight transition-all duration-500 group-hover:scale-105 sm:text-6xl">
                 <span className="bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent text-glow-neon">
                   {username}
                 </span>
               </h2>
-              <p className="font-mono text-xs font-semibold uppercase tracking-widest text-white/85 sm:text-base">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-widest text-white/85 sm:text-base">
                 FinlandSMP:n Omistaja <span className="text-yellow-400">👑</span>
               </p>
             </div>
