@@ -6,10 +6,10 @@ import skinUrl from "@/assets/elzuu-skin-nobg.png";
  */
 export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
   return (
-    <section className="relative mx-auto w-full max-w-4xl px-4 py-10 sm:py-14">
+    <section className="relative mx-auto w-full max-w-4xl overflow-hidden px-4 py-8 sm:overflow-visible sm:py-14">
       {/* Ambient halo */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-1/2 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-[color:var(--neon)]/25 blur-[80px] sm:blur-[120px] animate-pulse" />
+        <div className="absolute left-1/2 top-1/2 h-[90%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-[color:var(--neon)]/20 blur-[60px] sm:h-[110%] sm:w-[110%] sm:blur-[120px] animate-pulse" />
       </div>
 
       {/* Rotating conic border wrapper */}
