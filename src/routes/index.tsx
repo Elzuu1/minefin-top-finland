@@ -7,6 +7,7 @@ import { MuutServut } from "@/components/MuutServut";
 import { RollingBanner } from "@/components/RollingBanner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SubmitServerButton } from "@/components/SubmitServerButton";
+import { TotalPlayers } from "@/components/TotalPlayers";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -30,6 +31,7 @@ function Index() {
       <AdminLockButton />
       <SiteHeader />
       <Hero />
+      <TotalPlayers />
       <FounderCard />
       <RollingBanner />
       <Leaderboard />
