@@ -40,7 +40,7 @@ export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
               <img
                 src={skinUrl}
                 alt={`${username} Minecraft skin`}
-                className="relative h-64 w-auto object-contain [image-rendering:pixelated] drop-shadow-[0_0_25px_oklch(0.82_0.2_165_/_0.8)] transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_45px_oklch(0.82_0.2_165)] sm:h-96"
+                className="relative h-44 w-auto object-contain [image-rendering:pixelated] drop-shadow-[0_0_20px_oklch(0.82_0.2_165_/_0.8)] transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_45px_oklch(0.82_0.2_165)] sm:h-96"
                 loading="eager"
               />
             </div>
