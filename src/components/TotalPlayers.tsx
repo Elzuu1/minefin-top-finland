@@ -44,7 +44,7 @@ export function TotalPlayers() {
   const display = total ?? lastTotal.current;
 
   return (
-    <section className="relative mx-auto w-full max-w-4xl px-4 py-6 sm:py-10">
+    <section className="relative mx-auto w-full max-w-4xl overflow-hidden px-4 py-6 sm:overflow-visible sm:py-10">
       <div className="relative overflow-hidden rounded-3xl border border-[color:var(--neon)]/30 bg-gradient-to-br from-black/70 via-card/60 to-[color:var(--neon)]/10 px-6 py-6 backdrop-blur-xl sm:px-10 sm:py-8">
         <div className="pointer-events-none absolute -left-10 -top-10 h-40 w-40 rounded-full bg-[color:var(--neon)]/30 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-[color:var(--neon-2)]/25 blur-3xl" />
