@@ -142,9 +142,15 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
 
       <div className="mt-4 flex items-center justify-between gap-3 sm:mt-4">
         <div className="flex items-center gap-2 sm:hidden">
-          <span className="font-mono text-xl font-bold tabular-nums">
-            {server.live_loading ? "…" : server.players.toLocaleString()}
-          </span>
+          {server.live_loading ? (
+            <span className="relative block h-5 w-12 overflow-hidden rounded-md border border-border/60 bg-card/50">
+              <span className="absolute inset-0 animate-shimmer" />
+            </span>
+          ) : (
+            <span className="font-mono text-xl font-bold tabular-nums">
+              {server.players.toLocaleString()}
+            </span>
+          )}
           <span className="text-xs text-muted-foreground">/ {server.max_players}</span>
           <span
             className={["ml-1 h-2 w-2 rounded-full", statusDot].join(" ")}
