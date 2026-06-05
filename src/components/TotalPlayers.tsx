@@ -65,18 +65,28 @@ export function TotalPlayers() {
           </div>
 
           <div className="flex items-baseline gap-2">
-            <span
-              className={[
-                "font-display text-5xl font-black tabular-nums leading-none transition-all duration-500 sm:text-7xl",
-                "bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent text-glow-neon",
-                pulse ? "scale-110" : "scale-100",
-              ].join(" ")}
-            >
-              {display !== null ? display.toLocaleString("fi-FI") : "—"}
-            </span>
-            {maxTotal !== null && (
+            {display !== null ? (
+              <span
+                className={[
+                  "font-display text-5xl font-black tabular-nums leading-none transition-all duration-500 sm:text-7xl",
+                  "bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent text-glow-neon",
+                  pulse ? "scale-110" : "scale-100",
+                ].join(" ")}
+              >
+                {display.toLocaleString("fi-FI")}
+              </span>
+            ) : (
+              <span className="relative block h-12 w-32 overflow-hidden rounded-lg border border-border/60 bg-card/50 sm:h-16 sm:w-44">
+                <span className="absolute inset-0 animate-shimmer" />
+              </span>
+            )}
+            {maxTotal !== null ? (
               <span className="font-mono text-sm text-muted-foreground sm:text-base">
                 / {maxTotal.toLocaleString("fi-FI")}
+              </span>
+            ) : (
+              <span className="relative block h-4 w-12 overflow-hidden rounded bg-card/50">
+                <span className="absolute inset-0 animate-shimmer" />
               </span>
             )}
           </div>
