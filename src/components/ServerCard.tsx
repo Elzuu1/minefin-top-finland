@@ -46,10 +46,13 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
       to="/server/$slug"
       params={{ slug: server.slug }}
       className={[
-        "group relative block overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all duration-300",
+        "group relative block overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all",
         "hover:-translate-y-1 hover:border-border",
-        isTop3 ? "p-6 sm:p-7 ring-1 " + (style?.ring ?? "") : "",
+        isTop3 ? "p-6 sm:p-7 ring-1 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:scale-[1.015]" : "duration-300",
+        isTop3 ? (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
+        isTop3 ? (style?.border ?? "") : "",
+        isTop3 ? (style?.hoverGlow ?? "") : "",
         isFeatured && !isTop3 ? "animate-float-glow ring-1 ring-[color:var(--neon)]/60" : "",
         !server.online && !server.live_loading ? "grayscale opacity-60" : "",
       ].join(" ")}
