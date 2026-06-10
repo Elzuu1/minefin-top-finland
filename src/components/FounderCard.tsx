@@ -7,10 +7,10 @@ import skinUrl from "@/assets/elzuu-skin-nobg.png";
 export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
   return (
     <section className="relative mx-auto w-full max-w-4xl overflow-hidden px-4 py-10 sm:overflow-visible sm:py-16">
-      {/* Ambient multi-layer halo */}
+      {/* Ambient multi-layer halo — stronger breathing pulse */}
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-1/2 h-[110%] w-[110%] -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-[color:var(--neon)]/35 blur-[80px] sm:h-[140%] sm:w-[140%] sm:blur-[160px] animate-neon-ring" />
-        <div className="absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon-2)]/25 blur-[70px] sm:h-[100%] sm:w-[100%] sm:blur-[130px] animate-pulse" />
+        <div className="absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-[40%] bg-[color:var(--neon)]/45 blur-[90px] sm:h-[150%] sm:w-[150%] sm:blur-[180px] animate-strong-pulse" />
+        <div className="absolute left-1/2 top-1/2 h-[90%] w-[90%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon-2)]/35 blur-[80px] sm:h-[110%] sm:w-[110%] sm:blur-[150px] animate-strong-pulse" style={{ animationDelay: '0.6s' }} />
       </div>
 
       {/* Rotating conic border wrapper */}
