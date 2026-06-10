@@ -24,9 +24,9 @@ export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
           {/* Stronger sheen on hover/touch */}
           <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/50 to-transparent transition-transform duration-1000 ease-out group-hover:translate-x-full group-active:translate-x-full" />
 
-          {/* Glow orbs */}
-          <div className="pointer-events-none absolute -left-[15%] -top-[15%] h-[70%] w-[70%] rounded-full bg-[color:var(--neon)]/60 blur-3xl transition-all duration-500 group-hover:bg-[color:var(--neon)]/90 group-hover:scale-125" />
-          <div className="pointer-events-none absolute -bottom-[20%] -right-[10%] h-[80%] w-[80%] rounded-full bg-[color:var(--neon-2)]/40 blur-3xl transition-all duration-500 group-hover:bg-[color:var(--neon-2)]/75 group-hover:scale-125" />
+          {/* Glow orbs — bigger, stronger on hover */}
+          <div className="pointer-events-none absolute -left-[15%] -top-[15%] h-[70%] w-[70%] rounded-full bg-[color:var(--neon)]/70 blur-3xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:bg-[color:var(--neon)]/100 group-hover:scale-[1.35] group-active:scale-110" />
+          <div className="pointer-events-none absolute -bottom-[20%] -right-[10%] h-[80%] w-[80%] rounded-full bg-[color:var(--neon-2)]/50 blur-3xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:bg-[color:var(--neon-2)]/90 group-hover:scale-[1.35] group-active:scale-110" />
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.18),transparent_60%)]" />
           <div className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
 
