@@ -40,12 +40,12 @@ export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
             </div>
 
             <div className="relative">
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[160%] w-[160%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon)]/55 blur-3xl transition-all duration-500 group-hover:bg-[color:var(--neon)]/95 group-hover:scale-125 animate-neon-ring" />
-              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[120%] w-[120%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon-2)]/45 blur-2xl transition-all duration-500 group-hover:bg-[color:var(--neon-2)]/75" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[180%] w-[180%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon)]/65 blur-3xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:bg-[color:var(--neon)]/100 group-hover:scale-[1.25] group-active:scale-110 animate-strong-pulse" />
+              <div className="pointer-events-none absolute left-1/2 top-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[color:var(--neon-2)]/50 blur-2xl transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:bg-[color:var(--neon-2)]/85 group-hover:scale-[1.2] group-active:scale-105" />
               <img
                 src={skinUrl}
                 alt={`${username} Minecraft skin`}
-                className="relative h-44 w-auto object-contain [image-rendering:pixelated] drop-shadow-[0_0_30px_oklch(0.82_0.2_165)] transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-[0_0_70px_oklch(0.82_0.2_165)] sm:h-96"
+                className="relative h-44 w-auto object-contain [image-rendering:pixelated] drop-shadow-[0_0_30px_oklch(0.82_0.2_165)] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-[1.18] group-hover:drop-shadow-[0_0_90px_oklch(0.82_0.2_165)] group-active:scale-105 sm:h-96"
                 loading="eager"
               />
             </div>
