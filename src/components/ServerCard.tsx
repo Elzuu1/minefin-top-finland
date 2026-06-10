@@ -4,10 +4,10 @@ import type { ServerWithStats } from "@/lib/servers";
 import { ServerIcon } from "./ServerIcon";
 import { HypeButton } from "./HypeButton";
 
-const RANK_STYLES: Record<number, { glow: string; ring: string; color: string }> = {
-  1: { glow: "glow-gold", ring: "ring-[color:var(--gold)]/60", color: "text-[color:var(--gold)] text-glow-gold" },
-  2: { glow: "glow-silver", ring: "ring-[color:var(--silver)]/60", color: "text-[color:var(--silver)]" },
-  3: { glow: "glow-bronze", ring: "ring-[color:var(--bronze)]/60", color: "text-[color:var(--bronze)]" },
+const RANK_STYLES: Record<number, { glow: string; ring: string; border: string; color: string; hoverGlow: string }> = {
+  1: { glow: "glow-gold", ring: "ring-[color:var(--gold)]/60", border: "hover:border-[color:var(--gold)]", color: "text-[color:var(--gold)] text-glow-gold", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.84_0.17_88_/_0.7),0_0_20px_-4px_oklch(0.84_0.17_88_/_0.5)]" },
+  2: { glow: "glow-silver", ring: "ring-[color:var(--silver)]/60", border: "hover:border-[color:var(--silver)]", color: "text-[color:var(--silver)]", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.86_0.02_250_/_0.7),0_0_20px_-4px_oklch(0.86_0.02_250_/_0.5)]" },
+  3: { glow: "glow-bronze", ring: "ring-[color:var(--bronze)]/60", border: "hover:border-[color:var(--bronze)]", color: "text-[color:var(--bronze)]", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.7_0.13_55_/_0.7),0_0_20px_-4px_oklch(0.7_0.13_55_/_0.5)]" },
 };
 
 export function ServerCard({ server, rank }: { server: ServerWithStats; rank: number }) {
@@ -46,10 +46,13 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
       to="/server/$slug"
       params={{ slug: server.slug }}
       className={[
-        "group relative block overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all duration-300",
+        "group relative block overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all",
         "hover:-translate-y-1 hover:border-border",
-        isTop3 ? "p-6 sm:p-7 ring-1 " + (style?.ring ?? "") : "",
+        isTop3 ? "p-6 sm:p-7 ring-1 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:scale-[1.015]" : "duration-300",
+        isTop3 ? (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
+        isTop3 ? (style?.border ?? "") : "",
+        isTop3 ? (style?.hoverGlow ?? "") : "",
         isFeatured && !isTop3 ? "animate-float-glow ring-1 ring-[color:var(--neon)]/60" : "",
         !server.online && !server.live_loading ? "grayscale opacity-60" : "",
       ].join(" ")}
