@@ -152,6 +152,12 @@
   }
   .animate-float-glow { animation: float-glow 2.6s ease-in-out infinite; }
 
+  @keyframes strong-pulse {
+    0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.92); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+  }
+  .animate-strong-pulse { animation: strong-pulse 2.4s ease-in-out infinite; }
+
   @keyframes neon-ring-pulse {
     0%, 100% { opacity: 0.55; transform: translate(-50%, -50%) scale(1); }
     50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
