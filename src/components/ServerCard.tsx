@@ -4,10 +4,10 @@ import type { ServerWithStats } from "@/lib/servers";
 import { ServerIcon } from "./ServerIcon";
 import { HypeButton } from "./HypeButton";
 
-const RANK_STYLES: Record<number, { glow: string; ring: string; color: string }> = {
-  1: { glow: "glow-gold", ring: "ring-[color:var(--gold)]/60", color: "text-[color:var(--gold)] text-glow-gold" },
-  2: { glow: "glow-silver", ring: "ring-[color:var(--silver)]/60", color: "text-[color:var(--silver)]" },
-  3: { glow: "glow-bronze", ring: "ring-[color:var(--bronze)]/60", color: "text-[color:var(--bronze)]" },
+const RANK_STYLES: Record<number, { glow: string; ring: string; border: string; color: string; hoverGlow: string }> = {
+  1: { glow: "glow-gold", ring: "ring-[color:var(--gold)]/60", border: "hover:border-[color:var(--gold)]", color: "text-[color:var(--gold)] text-glow-gold", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.84_0.17_88_/_0.7),0_0_20px_-4px_oklch(0.84_0.17_88_/_0.5)]" },
+  2: { glow: "glow-silver", ring: "ring-[color:var(--silver)]/60", border: "hover:border-[color:var(--silver)]", color: "text-[color:var(--silver)]", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.86_0.02_250_/_0.7),0_0_20px_-4px_oklch(0.86_0.02_250_/_0.5)]" },
+  3: { glow: "glow-bronze", ring: "ring-[color:var(--bronze)]/60", border: "hover:border-[color:var(--bronze)]", color: "text-[color:var(--bronze)]", hoverGlow: "hover:shadow-[0_0_60px_-8px_oklch(0.7_0.13_55_/_0.7),0_0_20px_-4px_oklch(0.7_0.13_55_/_0.5)]" },
 };
 
 export function ServerCard({ server, rank }: { server: ServerWithStats; rank: number }) {
