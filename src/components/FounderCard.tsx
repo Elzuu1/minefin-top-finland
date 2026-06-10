@@ -51,7 +51,7 @@ export function FounderCard({ username = "Elzuu1" }: { username?: string }) {
             </div>
 
             <div className="space-y-2">
-              <h2 className="font-display text-3xl font-black tracking-tight transition-all duration-500 group-hover:scale-105 sm:text-6xl">
+              <h2 className="font-display text-3xl font-black tracking-tight transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] group-hover:scale-110 sm:text-6xl">
                 <span className="bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent text-glow-neon">
                   {username}
                 </span>
