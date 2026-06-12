@@ -46,9 +46,9 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
       to="/server/$slug"
       params={{ slug: server.slug }}
       className={[
-        "group relative block overflow-hidden rounded-2xl border border-border/60 bg-card/70 p-5 backdrop-blur transition-all",
+        "group relative block overflow-hidden rounded-xl border border-border/60 bg-card/70 p-3.5 backdrop-blur transition-all sm:rounded-2xl sm:p-5",
         "hover:-translate-y-1 hover:border-border",
-        isTop3 ? "p-6 sm:p-7 ring-1 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:scale-[1.015]" : "duration-300",
+        isTop3 ? "p-4 sm:p-7 ring-1 duration-500 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-2 hover:scale-[1.015]" : "duration-300",
         isTop3 ? (style?.ring ?? "") : "",
         isTop3 ? (style?.glow ?? "") : "",
         isTop3 ? (style?.border ?? "") : "",
@@ -59,11 +59,11 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
     >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-white/5 to-transparent blur-2xl" />
 
-      <div className="flex items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-2.5 sm:gap-4">
         <div
           className={[
-            "flex h-12 w-12 shrink-0 items-center justify-center rounded-xl font-mono text-xl font-bold",
-            isTop3 ? "text-2xl" : "",
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-lg font-mono text-base font-bold sm:h-12 sm:w-12 sm:rounded-xl sm:text-xl",
+            isTop3 ? "sm:text-2xl" : "",
             rank === 1 ? "bg-[color:var(--gold)]/15 text-[color:var(--gold)] text-glow-gold" : "",
             rank === 2 ? "bg-[color:var(--silver)]/15 text-[color:var(--silver)]" : "",
             rank === 3 ? "bg-[color:var(--bronze)]/15 text-[color:var(--bronze)]" : "",
@@ -77,7 +77,7 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
           <img
             src={server.favicon}
             alt=""
-            className="h-12 w-12 shrink-0 rounded-xl border border-border/60 bg-black/40 object-cover [image-rendering:pixelated]"
+            className="h-10 w-10 shrink-0 rounded-lg border border-border/60 bg-black/40 object-cover [image-rendering:pixelated] sm:h-12 sm:w-12 sm:rounded-xl"
           />
         ) : (
           <ServerIcon color={server.icon_color} letter={server.icon_letter} />
@@ -87,7 +87,7 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
           <div className="flex items-center gap-2">
             <h3
               className={[
-                "truncate text-lg font-bold sm:text-xl",
+                "truncate text-base font-bold sm:text-xl",
                 isFeatured ? "text-[color:var(--neon)] text-glow-neon" : "",
               ].join(" ")}
             >
@@ -99,13 +99,13 @@ export function ServerCard({ server, rank }: { server: ServerWithStats; rank: nu
               </span>
             )}
           </div>
-          <p className="mt-1 truncate font-mono text-xs text-muted-foreground">
+          <p className="mt-0.5 truncate font-mono text-[10px] text-muted-foreground sm:mt-1 sm:text-xs">
             {server.ip}
             {server.port && server.port !== 25565 ? `:${server.port}` : ""}
             {server.version ? <span className="ml-2 opacity-70">· {server.version}</span> : null}
             {server.ping_ms != null ? <span className="ml-2 opacity-70">· {server.ping_ms}ms</span> : null}
           </p>
-          <p className="mt-1 truncate text-xs text-muted-foreground">
+          <p className="mt-0.5 hidden truncate text-xs text-muted-foreground sm:mt-1 sm:block">
             {server.live_loading
               ? "Haetaan live dataa…"
               : server.live_error
