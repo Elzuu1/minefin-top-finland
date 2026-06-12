@@ -138,29 +138,29 @@ export function Leaderboard() {
   const top10 = servers?.slice(0, 10) ?? null;
 
   return (
-    <section id="leaderboard" className="relative mx-auto w-full max-w-5xl scroll-mt-24 px-4 py-20 sm:py-28">
-      <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
+    <section id="leaderboard" className="relative mx-auto w-full max-w-5xl scroll-mt-24 px-4 py-10 sm:py-28">
+      <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:mb-10 sm:flex-row sm:items-end sm:gap-4">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.25em] text-[color:var(--neon)]">
+          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--neon)] sm:text-xs sm:tracking-[0.25em]">
             Live Top 10
           </p>
-          <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Leaderboardit</h2>
-          <p className="mt-2 max-w-md text-sm text-muted-foreground">
+          <h2 className="mt-1 text-2xl font-bold sm:mt-2 sm:text-4xl">Leaderboardit</h2>
+          <p className="mt-1.5 max-w-md text-xs text-muted-foreground sm:mt-2 sm:text-sm">
             Suomen kymmenen suosituinta Minecraft-serveriä reaaliaikaisen pelaajamäärän mukaan.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-xs text-muted-foreground backdrop-blur">
+        <div className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-2.5 py-1 text-[10px] text-muted-foreground backdrop-blur sm:px-3 sm:py-1.5 sm:text-xs">
           <span
             className={[
-              "h-2 w-2 rounded-full",
+              "h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2",
               refreshing ? "bg-[color:var(--neon)] animate-pulse-dot" : "bg-[color:var(--success)]",
             ].join(" ")}
           />
           {refreshing
             ? "Pingataan…"
             : lastChecked
-              ? `Live · päivitetty ${lastChecked.toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`
-              : "Live · 30s välein"}
+              ? `Live · ${lastChecked.toLocaleTimeString("fi-FI", { hour: "2-digit", minute: "2-digit" })}`
+              : "Live · 30s"}
         </div>
       </div>
 
