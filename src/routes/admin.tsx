@@ -15,6 +15,7 @@ import {
 } from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
 import { BannersAdmin } from "@/components/BannersAdmin";
+import { WebsitesAdmin } from "@/components/WebsitesAdmin";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
@@ -467,7 +468,10 @@ function AdminPage() {
           </div>
         </div>
 
-        <BannersAdmin />
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <BannersAdmin />
+          <WebsitesAdmin />
+        </div>
       </div>
     </main>
   );
