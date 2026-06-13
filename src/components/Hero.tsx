@@ -1,4 +1,5 @@
-import { ArrowDown, Sparkles } from "lucide-react";
+import { ArrowDown, Globe, Sparkles } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 
 export function Hero() {
   return (
@@ -35,6 +36,16 @@ export function Hero() {
           <ArrowDown className="h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5 sm:h-5 sm:w-5" />
           <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
         </a>
+
+        <Link
+          to="/websitet"
+          className="group relative mt-3 inline-flex items-center gap-2 overflow-hidden rounded-full border border-red-500/50 bg-red-500/15 px-4 py-2 text-xs font-bold text-red-300 backdrop-blur shadow-[0_0_30px_-8px_rgba(239,68,68,0.6)] transition-all duration-300 hover:scale-[1.05] hover:border-red-400 hover:bg-red-500/25 hover:text-red-100 hover:shadow-[0_0_40px_-4px_rgba(239,68,68,0.8)] sm:mt-4 sm:gap-2.5 sm:px-6 sm:py-2.5 sm:text-sm animate-rise"
+          style={{ animationDelay: "320ms" }}
+        >
+          <Globe className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+          Muut Websitet
+          <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-red-200/30 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
+        </Link>
 
       </div>
     </section>

@@ -15,6 +15,7 @@ import {
 } from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
 import { BannersAdmin } from "@/components/BannersAdmin";
+import { WebsitesAdmin } from "@/components/WebsitesAdmin";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
