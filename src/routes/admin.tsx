@@ -468,7 +468,10 @@ function AdminPage() {
           </div>
         </div>
 
-        <BannersAdmin />
+        <div className="mt-8 grid gap-6 lg:grid-cols-2">
+          <BannersAdmin />
+          <WebsitesAdmin />
+        </div>
       </div>
     </main>
   );
