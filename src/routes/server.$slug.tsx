@@ -9,6 +9,7 @@ import { ServerIcon } from "@/components/ServerIcon";
 import { HypeButton } from "@/components/HypeButton";
 import { CommentsSection } from "@/components/CommentsSection";
 import { SiteHeader } from "@/components/SiteHeader";
+import { ServerStatsChart } from "@/components/ServerStatsChart";
 
 export const Route = createFileRoute("/server/$slug")({
   component: ServerProfile,
@@ -192,6 +193,8 @@ function ServerProfile() {
               <ExternalLink className="h-4 w-4" /> Discord
             </a>
           )}
+
+          <ServerStatsChart serverId={server.id} />
 
           <CommentsSection serverId={server.id} />
         </div>

@@ -16,6 +16,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServerSlugRouteImport } from './routes/server.$slug'
 import { Route as ApiMinecraftStatusRouteImport } from './routes/api/minecraft-status'
+import { Route as ApiPublicHooksSnapshotServersRouteImport } from './routes/api/public/hooks/snapshot-servers'
 
 const WebsitetRoute = WebsitetRouteImport.update({
   id: '/websitet',
@@ -52,6 +53,12 @@ const ApiMinecraftStatusRoute = ApiMinecraftStatusRouteImport.update({
   path: '/api/minecraft-status',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksSnapshotServersRoute =
+  ApiPublicHooksSnapshotServersRouteImport.update({
+    id: '/api/public/hooks/snapshot-servers',
+    path: '/api/public/hooks/snapshot-servers',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/websitet': typeof WebsitetRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
+  '/api/public/hooks/snapshot-servers': typeof ApiPublicHooksSnapshotServersRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +78,7 @@ export interface FileRoutesByTo {
   '/websitet': typeof WebsitetRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
+  '/api/public/hooks/snapshot-servers': typeof ApiPublicHooksSnapshotServersRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +89,7 @@ export interface FileRoutesById {
   '/websitet': typeof WebsitetRoute
   '/api/minecraft-status': typeof ApiMinecraftStatusRoute
   '/server/$slug': typeof ServerSlugRoute
+  '/api/public/hooks/snapshot-servers': typeof ApiPublicHooksSnapshotServersRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
     | '/websitet'
     | '/api/minecraft-status'
     | '/server/$slug'
+    | '/api/public/hooks/snapshot-servers'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +111,7 @@ export interface FileRouteTypes {
     | '/websitet'
     | '/api/minecraft-status'
     | '/server/$slug'
+    | '/api/public/hooks/snapshot-servers'
   id:
     | '__root__'
     | '/'
@@ -109,6 +121,7 @@ export interface FileRouteTypes {
     | '/websitet'
     | '/api/minecraft-status'
     | '/server/$slug'
+    | '/api/public/hooks/snapshot-servers'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +132,7 @@ export interface RootRouteChildren {
   WebsitetRoute: typeof WebsitetRoute
   ApiMinecraftStatusRoute: typeof ApiMinecraftStatusRoute
   ServerSlugRoute: typeof ServerSlugRoute
+  ApiPublicHooksSnapshotServersRoute: typeof ApiPublicHooksSnapshotServersRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiMinecraftStatusRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/snapshot-servers': {
+      id: '/api/public/hooks/snapshot-servers'
+      path: '/api/public/hooks/snapshot-servers'
+      fullPath: '/api/public/hooks/snapshot-servers'
+      preLoaderRoute: typeof ApiPublicHooksSnapshotServersRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,6 +204,7 @@ const rootRouteChildren: RootRouteChildren = {
   WebsitetRoute: WebsitetRoute,
   ApiMinecraftStatusRoute: ApiMinecraftStatusRoute,
   ServerSlugRoute: ServerSlugRoute,
+  ApiPublicHooksSnapshotServersRoute: ApiPublicHooksSnapshotServersRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

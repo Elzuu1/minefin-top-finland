@@ -115,6 +115,30 @@ export type Database = {
         }
         Relationships: []
       }
+      global_stats: {
+        Row: {
+          id: string
+          online_servers: number
+          recorded_at: string
+          total_players: number
+          total_servers: number
+        }
+        Insert: {
+          id?: string
+          online_servers?: number
+          recorded_at?: string
+          total_players?: number
+          total_servers?: number
+        }
+        Update: {
+          id?: string
+          online_servers?: number
+          recorded_at?: string
+          total_players?: number
+          total_servers?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -181,6 +205,38 @@ export type Database = {
           },
         ]
       }
+      server_daily_ath: {
+        Row: {
+          day: string
+          id: string
+          peak_at: string
+          peak_players: number
+          server_id: string
+        }
+        Insert: {
+          day: string
+          id?: string
+          peak_at?: string
+          peak_players?: number
+          server_id: string
+        }
+        Update: {
+          day?: string
+          id?: string
+          peak_at?: string
+          peak_players?: number
+          server_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "server_daily_ath_server_id_fkey"
+            columns: ["server_id"]
+            isOneToOne: false
+            referencedRelation: "servers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       server_hypes: {
         Row: {
           created_at: string
@@ -203,6 +259,41 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "server_hypes_server_id_fkey"
+            columns: ["server_id"]
+            isOneToOne: false
+            referencedRelation: "servers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      server_stats: {
+        Row: {
+          id: string
+          is_online: boolean
+          max_players: number
+          players: number
+          recorded_at: string
+          server_id: string
+        }
+        Insert: {
+          id?: string
+          is_online?: boolean
+          max_players?: number
+          players?: number
+          recorded_at?: string
+          server_id: string
+        }
+        Update: {
+          id?: string
+          is_online?: boolean
+          max_players?: number
+          players?: number
+          recorded_at?: string
+          server_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "server_stats_server_id_fkey"
             columns: ["server_id"]
             isOneToOne: false
             referencedRelation: "servers"
