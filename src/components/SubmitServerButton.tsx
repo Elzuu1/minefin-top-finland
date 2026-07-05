@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Plus, X, Lock, CheckCircle2, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth";
+import { useHypeRealtime } from "@/lib/use-hype-realtime";
 import {
   checkEligibility,
   createSubmission,
@@ -26,13 +27,26 @@ export function SubmitServerButton() {
   });
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const refreshEligibility = useCallback(() => {
     if (!user?.id) {
       setEligibility(null);
       return;
     }
     checkEligibility(user.id).then(setEligibility).catch(() => null);
   }, [user?.id]);
+
+  useEffect(() => {
+    refreshEligibility();
+  }, [refreshEligibility]);
+
+  // Re-check eligibility whenever the user hypes/unhypes anywhere on the site
+  const hypeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const onHype = useCallback(() => {
+    if (!user?.id) return;
+    if (hypeTimer.current) clearTimeout(hypeTimer.current);
+    hypeTimer.current = setTimeout(refreshEligibility, 400);
+  }, [user?.id, refreshEligibility]);
+  useHypeRealtime(onHype);
 
   useEffect(() => {
     if (!open) return;
