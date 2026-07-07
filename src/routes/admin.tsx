@@ -5,6 +5,7 @@ import { Check, Inbox, LogOut, Plus, RefreshCw, Shield, Star, Trash2, Users, X, 
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshAllServers } from "@/lib/ping.functions";
+import { useAuth } from "@/lib/auth";
 import type { DBServer } from "@/lib/servers";
 import {
   approveSubmission,
@@ -56,7 +57,8 @@ function slugify(s: string) {
 function AdminPage() {
   const navigate = useNavigate();
   const refresh = useServerFn(refreshAllServers);
-  const [authed, setAuthed] = useState(false);
+  const { user, isAdmin, loading, signOut } = useAuth();
+  const [remembered, setRemembered] = useState(false);
   const [servers, setServers] = useState<DBServer[] | null>(null);
   const [submissions, setSubmissions] = useState<ServerSubmission[] | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
@@ -66,8 +68,18 @@ function AdminPage() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("admin_access") === "true") setAuthed(true);
+    const hasRememberedAccess =
+      localStorage.getItem("admin_access") === "true" ||
+      sessionStorage.getItem("admin_access") === "true";
+    if (hasRememberedAccess) setRemembered(true);
   }, []);
+
+  useEffect(() => {
+    if (!isAdmin || typeof window === "undefined") return;
+    localStorage.setItem("admin_access", "true");
+    sessionStorage.removeItem("admin_access");
+    setRemembered(true);
+  }, [isAdmin]);
 
   const load = async () => {
     const { data } = await supabase.from("servers").select("*").order("sort_order");
@@ -84,16 +96,31 @@ function AdminPage() {
   };
 
   useEffect(() => {
-    if (authed) {
+    if (isAdmin) {
       load();
       loadSubmissions();
     }
-  }, [authed]);
+  }, [isAdmin]);
 
-  if (!authed) return <AdminPasswordGate onSuccess={() => setAuthed(true)} />;
+  if (loading || (remembered && user && !isAdmin)) {
+    return <AdminLoading />;
+  }
 
-  const logout = () => {
+  if (!isAdmin) {
+    return (
+      <AdminPasswordGate
+        onSuccess={() => {
+          localStorage.setItem("admin_access", "true");
+          setRemembered(true);
+        }}
+      />
+    );
+  }
+
+  const logout = async () => {
+    localStorage.removeItem("admin_access");
     sessionStorage.removeItem("admin_access");
+    await signOut();
     navigate({ to: "/" });
   };
 
@@ -472,6 +499,16 @@ function AdminPage() {
           <BannersAdmin />
           <WebsitesAdmin />
         </div>
+      </div>
+    </main>
+  );
+}
+
+function AdminLoading() {
+  return (
+    <main className="grid min-h-screen place-items-center bg-background px-4">
+      <div className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-sm text-muted-foreground backdrop-blur-xl">
+        Tarkistetaan admin-kirjautumista…
       </div>
     </main>
   );

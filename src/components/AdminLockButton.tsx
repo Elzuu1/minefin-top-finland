@@ -33,7 +33,8 @@ export function AdminLockButton() {
   const submit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (password === ADMIN_PASSWORD) {
-      sessionStorage.setItem("admin_access", "true");
+      localStorage.setItem("admin_access", "true");
+      sessionStorage.removeItem("admin_access");
       close();
       navigate({ to: "/admin" });
     } else {
