@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AdminLockButton } from "@/components/AdminLockButton";
-import { FounderCard } from "@/components/FounderCard";
 import { GlobalStatsMini } from "@/components/GlobalStatsMini";
 import { Hero } from "@/components/Hero";
 import { Leaderboard } from "@/components/Leaderboard";
