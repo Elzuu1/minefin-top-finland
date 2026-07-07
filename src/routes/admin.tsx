@@ -12,6 +12,7 @@ import {
   deleteSubmission,
   fetchSubmissions,
   rejectSubmission,
+  normalizeServerAddress,
   type ServerSubmission,
 } from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
@@ -57,29 +58,13 @@ function slugify(s: string) {
 function AdminPage() {
   const navigate = useNavigate();
   const refresh = useServerFn(refreshAllServers);
-  const { user, isAdmin, loading, signOut } = useAuth();
-  const [remembered, setRemembered] = useState(false);
+  const { isAdmin, loading, roleLoading, signOut } = useAuth();
   const [servers, setServers] = useState<DBServer[] | null>(null);
   const [submissions, setSubmissions] = useState<ServerSubmission[] | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [adding, setAdding] = useState(false);
   const [pinging, setPinging] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const hasRememberedAccess =
-      localStorage.getItem("admin_access") === "true" ||
-      sessionStorage.getItem("admin_access") === "true";
-    if (hasRememberedAccess) setRemembered(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isAdmin || typeof window === "undefined") return;
-    localStorage.setItem("admin_access", "true");
-    sessionStorage.removeItem("admin_access");
-    setRemembered(true);
-  }, [isAdmin]);
 
   const load = async () => {
     const { data } = await supabase.from("servers").select("*").order("sort_order");
@@ -102,23 +87,15 @@ function AdminPage() {
     }
   }, [isAdmin]);
 
-  if (loading || (remembered && user && !isAdmin)) {
+  if (loading || roleLoading) {
     return <AdminLoading />;
   }
 
   if (!isAdmin) {
-    return (
-      <AdminPasswordGate
-        onSuccess={() => {
-          localStorage.setItem("admin_access", "true");
-          setRemembered(true);
-        }}
-      />
-    );
+    return <AdminPasswordGate onSuccess={() => undefined} />;
   }
 
   const logout = async () => {
-    localStorage.removeItem("admin_access");
     sessionStorage.removeItem("admin_access");
     await signOut();
     navigate({ to: "/" });
@@ -141,11 +118,12 @@ function AdminPage() {
     setAdding(true);
     const slug = draft.slug.trim() || slugify(draft.name);
     const sort_order = (servers?.length ?? 0) + 1;
+    const address = normalizeServerAddress(draft.ip, draft.port);
     const { error } = await supabase.from("servers").insert({
       name: draft.name.trim(),
       slug,
-      ip: draft.ip.trim(),
-      port: draft.port || 25565,
+      ip: address.ip,
+      port: address.port,
       description: draft.description.trim() || null,
       category: draft.category.trim() || null,
       banner_url: draft.banner_url.trim() || null,
