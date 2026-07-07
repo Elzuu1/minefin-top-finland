@@ -33,7 +33,6 @@ function Index() {
       <Hero />
       <TotalPlayers />
       <GlobalStatsMini />
-      <FounderCard />
       <RollingBanner />
       <Leaderboard />
       <SubmitServerButton />
