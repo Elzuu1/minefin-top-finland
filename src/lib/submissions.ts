@@ -64,12 +64,25 @@ export type SubmissionInput = {
   logo_url?: string | null;
 };
 
+export function normalizeServerAddress(ip: string, port: number) {
+  const trimmed = ip.trim();
+  const match = trimmed.match(/^([^:\s]+):(\d{2,5})$/);
+  if (!match) return { ip: trimmed, port: port || 25565 };
+
+  const parsedPort = Number(match[2]);
+  return {
+    ip: match[1],
+    port: Number.isInteger(parsedPort) && parsedPort > 0 && parsedPort <= 65535 ? parsedPort : port || 25565,
+  };
+}
+
 export async function createSubmission(userId: string, input: SubmissionInput) {
+  const address = normalizeServerAddress(input.ip, input.port);
   const { error } = await supabase.from("server_submissions" as any).insert({
     user_id: userId,
     name: input.name.trim(),
-    ip: input.ip.trim(),
-    port: input.port || 25565,
+    ip: address.ip,
+    port: address.port,
     description: input.description?.trim() || null,
     version: input.version?.trim() || null,
     category: input.category?.trim() || null,
@@ -97,6 +110,7 @@ function slugify(s: string) {
 }
 
 export async function approveSubmission(sub: ServerSubmission) {
+  const address = normalizeServerAddress(sub.ip, sub.port);
   // Determine next sort_order
   const { count } = await supabase.from("servers").select("*", { count: "exact", head: true });
   const sort_order = (count ?? 0) + 1;
@@ -109,8 +123,8 @@ export async function approveSubmission(sub: ServerSubmission) {
   const { error: insertErr } = await supabase.from("servers").insert({
     name: sub.name,
     slug,
-    ip: sub.ip,
-    port: sub.port,
+    ip: address.ip,
+    port: address.port,
     description: sub.description,
     version: sub.version,
     category: sub.category,

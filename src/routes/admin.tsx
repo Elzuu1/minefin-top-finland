@@ -5,12 +5,14 @@ import { Check, Inbox, LogOut, Plus, RefreshCw, Shield, Star, Trash2, Users, X, 
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { refreshAllServers } from "@/lib/ping.functions";
+import { useAuth } from "@/lib/auth";
 import type { DBServer } from "@/lib/servers";
 import {
   approveSubmission,
   deleteSubmission,
   fetchSubmissions,
   rejectSubmission,
+  normalizeServerAddress,
   type ServerSubmission,
 } from "@/lib/submissions";
 import { AdminPasswordGate } from "@/components/AdminPasswordGate";
@@ -56,18 +58,13 @@ function slugify(s: string) {
 function AdminPage() {
   const navigate = useNavigate();
   const refresh = useServerFn(refreshAllServers);
-  const [authed, setAuthed] = useState(false);
+  const { isAdmin, loading, roleLoading, signOut } = useAuth();
   const [servers, setServers] = useState<DBServer[] | null>(null);
   const [submissions, setSubmissions] = useState<ServerSubmission[] | null>(null);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
   const [adding, setAdding] = useState(false);
   const [pinging, setPinging] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (sessionStorage.getItem("admin_access") === "true") setAuthed(true);
-  }, []);
 
   const load = async () => {
     const { data } = await supabase.from("servers").select("*").order("sort_order");
@@ -84,16 +81,23 @@ function AdminPage() {
   };
 
   useEffect(() => {
-    if (authed) {
+    if (isAdmin) {
       load();
       loadSubmissions();
     }
-  }, [authed]);
+  }, [isAdmin]);
 
-  if (!authed) return <AdminPasswordGate onSuccess={() => setAuthed(true)} />;
+  if (loading || roleLoading) {
+    return <AdminLoading />;
+  }
 
-  const logout = () => {
+  if (!isAdmin) {
+    return <AdminPasswordGate onSuccess={() => undefined} />;
+  }
+
+  const logout = async () => {
     sessionStorage.removeItem("admin_access");
+    await signOut();
     navigate({ to: "/" });
   };
 
@@ -114,11 +118,12 @@ function AdminPage() {
     setAdding(true);
     const slug = draft.slug.trim() || slugify(draft.name);
     const sort_order = (servers?.length ?? 0) + 1;
+    const address = normalizeServerAddress(draft.ip, draft.port);
     const { error } = await supabase.from("servers").insert({
       name: draft.name.trim(),
       slug,
-      ip: draft.ip.trim(),
-      port: draft.port || 25565,
+      ip: address.ip,
+      port: address.port,
       description: draft.description.trim() || null,
       category: draft.category.trim() || null,
       banner_url: draft.banner_url.trim() || null,
@@ -472,6 +477,16 @@ function AdminPage() {
           <BannersAdmin />
           <WebsitesAdmin />
         </div>
+      </div>
+    </main>
+  );
+}
+
+function AdminLoading() {
+  return (
+    <main className="grid min-h-screen place-items-center bg-background px-4">
+      <div className="rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-sm text-muted-foreground backdrop-blur-xl">
+        Tarkistetaan admin-kirjautumista…
       </div>
     </main>
   );

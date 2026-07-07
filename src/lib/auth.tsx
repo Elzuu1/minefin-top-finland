@@ -15,6 +15,7 @@ type AuthContextValue = {
   profile: Profile | null;
   isAdmin: boolean;
   loading: boolean;
+  roleLoading: boolean;
   signOut: () => Promise<void>;
 };
 
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(false);
 
   useEffect(() => {
     // Listener FIRST, then getSession (per Supabase auth pattern)
@@ -34,17 +36,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(newSession?.user ?? null);
       if (newSession?.user) {
         // Defer DB calls to avoid deadlocks inside the callback
+        setRoleLoading(true);
         setTimeout(() => loadProfileAndRole(newSession.user.id), 0);
       } else {
         setProfile(null);
         setIsAdmin(false);
+        setRoleLoading(false);
       }
     });
 
-    supabase.auth.getSession().then(({ data: { session: s } }) => {
+    supabase.auth.getSession().then(async ({ data: { session: s } }) => {
       setSession(s);
       setUser(s?.user ?? null);
-      if (s?.user) loadProfileAndRole(s.user.id);
+      if (s?.user) {
+        setRoleLoading(true);
+        await loadProfileAndRole(s.user.id);
+      }
       setLoading(false);
     });
 
@@ -52,12 +59,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function loadProfileAndRole(userId: string) {
-    const [{ data: prof }, { data: roles }] = await Promise.all([
-      supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
-      supabase.from("user_roles").select("role").eq("user_id", userId),
-    ]);
-    setProfile(prof as Profile | null);
-    setIsAdmin((roles ?? []).some((r) => r.role === "admin"));
+    try {
+      const [{ data: prof }, { data: roles }] = await Promise.all([
+        supabase.from("profiles").select("*").eq("id", userId).maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", userId),
+      ]);
+      setProfile(prof as Profile | null);
+      setIsAdmin((roles ?? []).some((r) => r.role === "admin"));
+    } finally {
+      setRoleLoading(false);
+    }
   }
 
   const signOut = async () => {
@@ -65,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, isAdmin, loading, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, isAdmin, loading, roleLoading, signOut }}>
       {children}
     </AuthContext.Provider>
   );
