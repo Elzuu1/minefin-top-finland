@@ -4,25 +4,26 @@ import { Link } from "@tanstack/react-router";
 export function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 grid-bg" />
+      <div className="pointer-events-none absolute inset-0 grid-bg opacity-30" />
       <div className="absolute inset-x-0 top-0 -z-10 h-[120%]" style={{ background: "var(--gradient-hero)" }} />
+      <div className="pointer-events-none absolute left-1/2 top-1/3 -z-10 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-[color:var(--neon)]/20 blur-[120px] sm:h-[640px] sm:w-[640px]" />
 
-      <div className="relative mx-auto flex min-h-[70vh] max-w-5xl flex-col items-center justify-center px-4 py-12 text-center sm:min-h-[85vh] sm:py-20">
-        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-3 py-1.5 text-[10px] font-medium text-muted-foreground backdrop-blur animate-rise sm:text-xs">
+      <div className="relative mx-auto flex min-h-[62vh] max-w-5xl flex-col items-center justify-center px-4 py-12 text-center sm:min-h-[74vh] sm:py-20">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-[10px] font-medium tracking-wide text-muted-foreground backdrop-blur animate-rise sm:text-xs">
           <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--neon)] animate-pulse-dot sm:h-2 sm:w-2" />
-          Live Suomen Minecraft-serverit
+          Live · Suomen Minecraft-serverit
         </div>
 
         <h1
-          className="mt-5 font-display text-5xl font-black leading-[0.95] tracking-tight sm:mt-8 sm:text-8xl md:text-9xl animate-rise"
+          className="mt-6 font-display text-6xl font-black leading-[0.9] tracking-tight sm:mt-8 sm:text-8xl animate-rise"
           style={{ animationDelay: "80ms" }}
         >
-          <span className="bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent text-glow-neon">
+          <span className="bg-gradient-to-br from-white via-white to-[color:var(--neon)] bg-clip-text text-transparent">
             MINEFIN
           </span>
         </h1>
 
-        <p className="mt-4 text-sm text-muted-foreground sm:mt-6 sm:text-xl animate-rise" style={{ animationDelay: "160ms" }}>
+        <p className="mt-4 max-w-md text-sm text-muted-foreground/80 sm:mt-5 sm:text-base animate-rise" style={{ animationDelay: "160ms" }}>
           Suomen Minecraft Leaderboardit
         </p>
 
