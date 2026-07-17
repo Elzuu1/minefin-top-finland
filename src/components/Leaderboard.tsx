@@ -19,7 +19,7 @@ type MinecraftStatusResponse = {
 
 function Skeleton() {
   return (
-    <div className="relative h-[100px] overflow-hidden rounded-2xl border border-border/60 bg-card/50">
+    <div className="relative h-[360px] overflow-hidden rounded-[2rem] border border-white/[0.06] bg-card/40">
       <div className="absolute inset-0 animate-shimmer" />
     </div>
   );
@@ -138,22 +138,24 @@ export function Leaderboard() {
   const top10 = servers?.slice(0, 10) ?? null;
 
   return (
-    <section id="leaderboard" className="relative mx-auto w-full max-w-5xl scroll-mt-24 px-4 py-10 sm:py-28">
-      <div className="mb-6 flex flex-col items-start justify-between gap-3 sm:mb-10 sm:flex-row sm:items-end sm:gap-4">
+    <section id="leaderboard" className="relative mx-auto w-full max-w-6xl scroll-mt-24 px-6 py-16 sm:py-32">
+      <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:mb-16 sm:flex-row sm:items-end">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[color:var(--neon)] sm:text-xs sm:tracking-[0.25em]">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[color:var(--neon)] sm:text-xs">
             Live Top 10
           </p>
-          <h2 className="mt-1 text-2xl font-bold sm:mt-2 sm:text-4xl">Leaderboardit</h2>
-          <p className="mt-1.5 max-w-md text-xs text-muted-foreground sm:mt-2 sm:text-sm">
+          <h2 className="mt-3 font-display text-4xl font-black tracking-tighter sm:text-6xl">
+            Leaderboard
+          </h2>
+          <p className="mt-3 max-w-md text-sm text-muted-foreground sm:text-base">
             Suomen kymmenen suosituinta Minecraft-serveriä reaaliaikaisen pelaajamäärän mukaan.
           </p>
         </div>
-        <div className="flex items-center gap-2 rounded-full border border-border bg-card/60 px-2.5 py-1 text-[10px] text-muted-foreground backdrop-blur sm:px-3 sm:py-1.5 sm:text-xs">
+        <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground backdrop-blur sm:text-xs">
           <span
             className={[
-              "h-1.5 w-1.5 rounded-full sm:h-2 sm:w-2",
-              refreshing ? "bg-[color:var(--neon)] animate-pulse-dot" : "bg-[color:var(--success)]",
+              "h-2 w-2 rounded-full",
+              refreshing ? "bg-[color:var(--neon)] animate-pulse-dot" : "bg-[color:var(--success)] animate-pulse-dot",
             ].join(" ")}
           />
           {refreshing
@@ -164,17 +166,17 @@ export function Leaderboard() {
         </div>
       </div>
 
-      <div className="space-y-3">
-        {!top10 && Array.from({ length: 10 }).map((_, i) => <Skeleton key={i} />)}
+      <div className="grid grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        {!top10 && Array.from({ length: 6 }).map((_, i) => <Skeleton key={i} />)}
 
         {error && (
-          <div className="rounded-2xl border border-[color:var(--danger)]/40 bg-[color:var(--danger)]/10 px-4 py-3 text-sm text-[color:var(--danger)]">
+          <div className="col-span-full rounded-2xl border border-[color:var(--danger)]/40 bg-[color:var(--danger)]/10 px-4 py-3 text-sm text-[color:var(--danger)]">
             {error}
           </div>
         )}
 
         {top10?.map((s, i) => (
-          <div key={s.id} className="animate-rise" style={{ animationDelay: `${i * 40}ms` }}>
+          <div key={s.id} className="animate-rise" style={{ animationDelay: `${i * 60}ms` }}>
             <ServerCard server={s} rank={i + 1} />
           </div>
         ))}

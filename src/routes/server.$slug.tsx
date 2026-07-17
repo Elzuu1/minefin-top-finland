@@ -1,11 +1,10 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowLeft, ArrowUp, Copy, ExternalLink, Minus } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Copy, ExternalLink, Minus, Users, Wifi, Gauge } from "lucide-react";
 import { toast } from "sonner";
 import { fetchServerBySlug, type ServerWithStats } from "@/lib/servers";
 import { useAuth } from "@/lib/auth";
 import { useHypeRealtime } from "@/lib/use-hype-realtime";
-import { ServerIcon } from "@/components/ServerIcon";
 import { HypeButton } from "@/components/HypeButton";
 import { CommentsSection } from "@/components/CommentsSection";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -52,8 +51,8 @@ function ServerProfile() {
     return (
       <main className="min-h-screen">
         <SiteHeader />
-        <div className="mx-auto max-w-4xl px-4 py-16">
-          <div className="h-64 animate-shimmer rounded-3xl bg-card/50" />
+        <div className="mx-auto max-w-5xl px-4 py-16">
+          <div className="h-80 animate-shimmer rounded-[2rem] bg-card/50" />
         </div>
       </main>
     );
@@ -64,8 +63,8 @@ function ServerProfile() {
       <main className="min-h-screen">
         <SiteHeader />
         <div className="mx-auto max-w-md px-4 py-32 text-center">
-          <h1 className="text-3xl font-bold">Serveriä ei löytynyt</h1>
-          <Link to="/" className="mt-4 inline-block text-sm text-[color:var(--neon)] hover:underline">
+          <h1 className="font-display text-4xl font-black">Serveriä ei löytynyt</h1>
+          <Link to="/" className="mt-6 inline-block text-sm text-[color:var(--neon)] hover:underline">
             ← Takaisin etusivulle
           </Link>
         </div>
@@ -73,159 +72,258 @@ function ServerProfile() {
     );
   }
 
+  const accent = server.icon_color || "oklch(0.82 0.2 165)";
   const TrendIcon = server.trend === "up" ? ArrowUp : server.trend === "down" ? ArrowDown : Minus;
+  const trendColor =
+    server.trend === "up"
+      ? "text-[color:var(--success)]"
+      : server.trend === "down"
+        ? "text-[color:var(--danger)]"
+        : "text-muted-foreground";
 
   const copyIp = async () => {
-    await navigator.clipboard.writeText(server.ip);
-    toast.success("IP kopioitu leikepöydälle");
+    const full = server.port && server.port !== 25565 ? `${server.ip}:${server.port}` : server.ip;
+    await navigator.clipboard.writeText(full);
+    toast.success("Osoite kopioitu");
   };
 
+  const fillPct = server.max_players > 0 ? Math.min(100, (server.players / server.max_players) * 100) : 0;
+
   return (
-    <main className="min-h-screen">
+    <main
+      className="min-h-screen"
+      style={{ ["--srv" as any]: accent }}
+    >
       <SiteHeader />
 
-      <div className="relative">
-        {/* Banner */}
+      {/* Themed hero */}
+      <section className="relative overflow-hidden pb-12 pt-8 sm:pb-20 sm:pt-14">
         <div
-          className="relative h-56 overflow-hidden border-b border-border/60 sm:h-72"
+          className="pointer-events-none absolute inset-0 -z-10 opacity-90"
           style={{
-            background: `linear-gradient(135deg, ${server.icon_color}, oklch(0.18 0.04 260))`,
+            background: `radial-gradient(60% 60% at 50% 0%, ${accent}22 0%, transparent 60%)`,
           }}
-        >
-          <div className="absolute inset-0 grid-bg opacity-50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
-          {server.is_featured && (
-            <div className="absolute right-4 top-4 rounded-full border border-[color:var(--neon)]/40 bg-background/80 px-3 py-1 text-xs font-bold text-[color:var(--neon)] backdrop-blur">
-              ★ FEATURED
-            </div>
-          )}
-        </div>
+        />
+        <div className="pointer-events-none absolute inset-0 -z-10 grid-bg opacity-20" />
 
-        <div className="mx-auto max-w-4xl px-4">
+        <div className="mx-auto max-w-5xl px-6">
           <Link
             to="/"
-            className="-mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground transition-colors hover:text-foreground"
+            className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-muted-foreground transition-colors hover:text-foreground"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Takaisin
           </Link>
 
-          <div className="-mt-12 flex items-end gap-4">
-            <div className="rounded-2xl border-4 border-background bg-background p-1">
-              <div className="scale-150 sm:scale-[1.75]">
-                <ServerIcon color={server.icon_color} letter={server.icon_letter} />
+          <div className="mt-8 flex flex-col items-center gap-8 text-center sm:mt-12">
+            {/* Big themed favicon */}
+            <div className="relative">
+              <div
+                className="absolute -inset-6 -z-10 rounded-full blur-3xl"
+                style={{ background: `${accent}55` }}
+              />
+              <div
+                className="rounded-[2rem] border-2 p-2 shadow-2xl"
+                style={{ borderColor: `${accent}80`, background: "oklch(0.12 0.02 260 / 0.6)" }}
+              >
+                {server.favicon ? (
+                  <img
+                    src={server.favicon}
+                    alt=""
+                    className="h-28 w-28 rounded-2xl [image-rendering:pixelated] sm:h-36 sm:w-36"
+                  />
+                ) : (
+                  <div
+                    className="flex h-28 w-28 items-center justify-center rounded-2xl font-display text-6xl font-black text-background sm:h-36 sm:w-36 sm:text-7xl"
+                    style={{ background: accent }}
+                  >
+                    {server.icon_letter}
+                  </div>
+                )}
               </div>
             </div>
-          </div>
 
-          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-            <div className="min-w-0">
-              <h1
-                className={[
-                  "text-3xl font-black sm:text-4xl",
-                  server.is_featured ? "text-[color:var(--neon)] text-glow-neon" : "",
-                ].join(" ")}
+            {server.category && (
+              <div
+                className="inline-flex rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-widest"
+                style={{
+                  borderColor: `${accent}40`,
+                  background: `${accent}10`,
+                  color: accent,
+                }}
               >
-                {server.name}
-              </h1>
+                {server.category}
+                {server.is_featured ? " · ★ Featured" : ""}
+              </div>
+            )}
+
+            <h1 className="font-display text-5xl font-black tracking-tighter sm:text-7xl">
+              {server.name}
+            </h1>
+
+            {server.motd && (
+              <p className="max-w-xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                {server.motd}
+              </p>
+            )}
+
+            <div className="flex flex-wrap items-center justify-center gap-3">
               <button
                 onClick={copyIp}
-                className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-border bg-card/60 px-3 py-1.5 font-mono text-xs text-muted-foreground transition-colors hover:text-foreground"
+                className="group inline-flex items-center gap-2 rounded-2xl border-2 px-5 py-3 font-mono text-sm font-bold transition-all hover:scale-[1.02]"
+                style={{
+                  borderColor: `${accent}60`,
+                  background: `${accent}10`,
+                  color: accent,
+                }}
               >
-                {server.ip} <Copy className="h-3 w-3" />
+                {server.ip}
+                {server.port && server.port !== 25565 ? `:${server.port}` : ""}
+                <Copy className="h-4 w-4 opacity-70 transition-opacity group-hover:opacity-100" />
               </button>
+              <HypeButton
+                serverId={server.id}
+                hypeCount={server.hype_count}
+                hyped={server.user_hyped}
+                size="lg"
+              />
+              {server.discord_url && (
+                <a
+                  href={server.discord_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-5 py-3 text-sm font-bold transition-colors hover:border-white/30 hover:text-foreground"
+                >
+                  <ExternalLink className="h-4 w-4" /> Discord
+                </a>
+              )}
             </div>
+          </div>
+        </div>
+      </section>
 
-            <HypeButton
-              serverId={server.id}
-              hypeCount={server.hype_count}
-              hyped={server.user_hyped}
-              size="lg"
+      <div className="mx-auto max-w-5xl px-6 pb-24">
+        {/* Live stats row */}
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          <ThemedStat
+            label="Pelaajia"
+            value={server.players.toLocaleString()}
+            sub={`/ ${server.max_players}`}
+            accent={accent}
+            icon={<Users className="h-4 w-4" />}
+          />
+          <ThemedStat
+            label="Tila"
+            value={server.online ? "Online" : "Offline"}
+            accent={accent}
+            valueColor={server.online ? "text-[color:var(--success)]" : "text-[color:var(--danger)]"}
+            icon={<Wifi className="h-4 w-4" />}
+          />
+          <ThemedStat
+            label="Ping"
+            value={server.ping_ms != null ? `${server.ping_ms}ms` : "—"}
+            accent={accent}
+            icon={<Gauge className="h-4 w-4" />}
+          />
+          <ThemedStat
+            label="Trendi"
+            value={server.trend.toUpperCase()}
+            accent={accent}
+            valueColor={trendColor}
+            icon={<TrendIcon className="h-4 w-4" />}
+          />
+        </div>
+
+        {/* Capacity bar */}
+        <div
+          className="mt-6 rounded-[2rem] border p-6 backdrop-blur"
+          style={{
+            borderColor: `${accent}25`,
+            background: `linear-gradient(180deg, ${accent}08, transparent)`,
+          }}
+        >
+          <div className="mb-3 flex items-baseline justify-between">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Kapasiteetti
+            </span>
+            <span className="font-mono text-sm text-foreground">
+              {server.players} / {server.max_players}{" "}
+              <span className="text-muted-foreground">({fillPct.toFixed(0)}%)</span>
+            </span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-white/5">
+            <div
+              className="h-full rounded-full transition-all duration-1000"
+              style={{
+                width: `${fillPct}%`,
+                background: `linear-gradient(90deg, ${accent}, ${accent}aa)`,
+                boxShadow: `0 0 12px ${accent}`,
+              }}
             />
           </div>
+        </div>
 
-          {/* Stats grid */}
-          <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Stat label="Pelaajia" value={server.players.toLocaleString()} sub={`/ ${server.max_players}`} />
-            <Stat
-              label="Tila"
-              value={server.online ? "Online" : "Offline"}
-              valueColor={server.online ? "text-[color:var(--success)]" : "text-[color:var(--danger)]"}
-              icon={
-                <span
-                  className={[
-                    "inline-block h-2.5 w-2.5 rounded-full",
-                    server.online ? "bg-[color:var(--success)] animate-pulse-dot" : "bg-[color:var(--danger)]",
-                  ].join(" ")}
-                />
-              }
-            />
-            <Stat label="Versio" value={server.version ?? "—"} />
-            <Stat
-              label="Trendi"
-              value={server.trend.toUpperCase()}
-              icon={<TrendIcon className="h-4 w-4" />}
-              valueColor={
-                server.trend === "up"
-                  ? "text-[color:var(--success)]"
-                  : server.trend === "down"
-                    ? "text-[color:var(--danger)]"
-                    : ""
-              }
-            />
-          </div>
-
-          {/* Description */}
-          {server.description && (
-            <div className="mt-6 rounded-2xl border border-border bg-card/60 p-5 backdrop-blur">
-              <h2 className="mb-2 text-xs font-mono uppercase tracking-widest text-muted-foreground">Tietoa</h2>
-              <p className="whitespace-pre-wrap text-sm text-foreground/90">{server.description}</p>
-            </div>
-          )}
-
-          {/* Discord */}
-          {server.discord_url && (
-            <a
-              href={server.discord_url}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-4 inline-flex items-center gap-2 rounded-full border border-border bg-card/60 px-4 py-2 text-sm font-semibold transition-colors hover:border-[color:var(--neon-2)]/60 hover:text-[color:var(--neon-2)]"
+        {server.description && (
+          <div
+            className="mt-6 rounded-[2rem] border p-6 backdrop-blur sm:p-8"
+            style={{ borderColor: `${accent}20`, background: `${accent}05` }}
+          >
+            <h2
+              className="mb-3 text-[10px] font-bold uppercase tracking-[0.25em]"
+              style={{ color: accent }}
             >
-              <ExternalLink className="h-4 w-4" /> Discord
-            </a>
-          )}
+              Tietoa serveristä
+            </h2>
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90 sm:text-base">
+              {server.description}
+            </p>
+          </div>
+        )}
 
+        <div className="mt-8">
           <ServerStatsChart serverId={server.id} />
+        </div>
 
+        <div className="mt-8">
           <CommentsSection serverId={server.id} />
         </div>
       </div>
 
-      <footer className="mt-20 border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
+      <footer className="border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
         © {new Date().getFullYear()} Minefin
       </footer>
     </main>
   );
 }
 
-function Stat({
+function ThemedStat({
   label,
   value,
   sub,
   icon,
   valueColor,
+  accent,
 }: {
   label: string;
   value: string;
   sub?: string;
   icon?: React.ReactNode;
   valueColor?: string;
+  accent: string;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card/60 p-4 backdrop-blur">
-      <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{label}</p>
-      <div className="mt-1 flex items-baseline gap-2">
+    <div
+      className="relative overflow-hidden rounded-[1.5rem] border p-5 backdrop-blur"
+      style={{
+        borderColor: `${accent}20`,
+        background: `linear-gradient(160deg, ${accent}08, transparent 70%)`,
+      }}
+    >
+      <div className="flex items-center gap-1.5" style={{ color: accent }}>
         {icon}
-        <span className={["font-mono text-2xl font-bold tabular-nums", valueColor ?? ""].join(" ")}>
+        <p className="text-[10px] font-bold uppercase tracking-[0.2em]">{label}</p>
+      </div>
+      <div className="mt-3 flex items-baseline gap-2">
+        <span className={["font-display text-3xl font-black tabular-nums", valueColor ?? ""].join(" ")}>
           {value}
         </span>
         {sub && <span className="text-xs text-muted-foreground">{sub}</span>}
