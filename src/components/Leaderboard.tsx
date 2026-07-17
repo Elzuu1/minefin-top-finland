@@ -19,7 +19,7 @@ type MinecraftStatusResponse = {
 
 function Skeleton() {
   return (
-    <div className="relative h-[100px] overflow-hidden rounded-2xl border border-border/60 bg-card/50">
+    <div className="relative h-[360px] overflow-hidden rounded-[2rem] border border-white/[0.06] bg-card/40">
       <div className="absolute inset-0 animate-shimmer" />
     </div>
   );
